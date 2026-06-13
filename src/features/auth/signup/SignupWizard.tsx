@@ -10,6 +10,7 @@ import type { AccountData } from './Step1Account';
 import type { ProtectedPerson, ProtectionProfile } from '../../../types';
 
 const STEPS = ['Tu cuenta', 'Persona protegida', 'Perfil de protección'];
+const BOT_URL = 'https://t.me/pugguardian_bot';
 
 const DEFAULT_ACCOUNT: AccountData = { fullName: '', email: '', phone: '', password: '', confirmPassword: '' };
 const DEFAULT_PERSON: ProtectedPerson = { name: '', phone: '' };
@@ -23,6 +24,7 @@ export function SignupWizard() {
   const [profile, setProfile] = useState<ProtectionProfile>(DEFAULT_PROFILE);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   async function handleStep3(profileData: ProtectionProfile) {
     setSubmitting(true);
@@ -48,11 +50,22 @@ export function SignupWizard() {
         },
       });
       signIn(user);
-      navigate('/dashboard', { replace: true });
+      setStep(3);
     } catch (err) {
       setServerError(err instanceof Error ? err.message : 'Error al crear la cuenta.');
       setSubmitting(false);
     }
+  }
+
+  function botDeepLink() {
+    const phone = account.phone.replace(/\D/g, '');
+    return phone ? `${BOT_URL}?start=${phone}` : BOT_URL;
+  }
+
+  function handleCopy() {
+    void navigator.clipboard.writeText(botDeepLink());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -107,6 +120,65 @@ export function SignupWizard() {
               onBack={() => setStep(1)}
               submitting={submitting}
             />
+          )}
+          {step === 3 && (
+            <div className="text-center space-y-5">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <i className="pi pi-check-circle text-3xl text-green-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">¡Cuenta creada!</h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Comparte el bot de Telegram con <span className="font-semibold text-slate-700">{person.name}</span> para que pueda enviarnos mensajes sospechosos.
+                </p>
+              </div>
+
+              {/* Step 1: Guardian opens bot */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2 text-left">
+                <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Paso 1 — Tú</p>
+                <p className="text-sm text-slate-600">Abre el bot en Telegram para activar tus notificaciones.</p>
+                <a
+                  href={botDeepLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors w-full"
+                >
+                  <i className="pi pi-send" />
+                  Abrir @pugguardian_bot
+                </a>
+              </div>
+
+              {/* Step 2: Share with protected person */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 text-left">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Paso 2 — {person.name}</p>
+                <p className="text-sm text-slate-600">Comparte el bot con la persona que quieres proteger.</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+                  >
+                    <i className={copied ? 'pi pi-check text-green-600' : 'pi pi-copy'} />
+                    {copied ? '¡Copiado!' : 'Copiar link'}
+                  </button>
+                  <a
+                    href={`https://t.me/share/url?url=${encodeURIComponent(botDeepLink())}&text=${encodeURIComponent(`Hola ${person.name}, este es el bot de PugGuardian para enviarnos mensajes sospechosos: `)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <i className="pi pi-send" />
+                    Compartir
+                  </a>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/dashboard', { replace: true })}
+                className="w-full bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+              >
+                Ir al dashboard <i className="pi pi-arrow-right ml-1" />
+              </button>
+            </div>
           )}
         </div>
 

@@ -22,6 +22,8 @@ export interface TrustedContact {
 
 // Matches perfil_struct.json exactly
 export interface ProtectionProfile {
+  trustedContacts: any;
+  pensionInstitution: any;
   banking: {
     banks: string[];
     departmentCards: string[];
