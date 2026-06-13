@@ -1,0 +1,195 @@
+Eligiendo idea para hackathon de IA
+Compartido por Daniel
+
+Esta es una copia de un chat entre Claude y Daniel. El contenido puede incluir material no verificado o inseguro que no representa las opiniones de Anthropic. La instantánea compartida puede contener archivos adjuntos y datos que no se muestran aquí.
+
+Tenemos un proyecto para un hackathon usando ia y tenemos 2 ideas
+La primera es un control parental inverso, donde los hijos puedan controlar lo que hacen sus padres en internet y evitar estafas usando ia, como preguntas que tengan los papás sobre cosas que le pasen en internet
+La segunda es un control de inventario por medio de camara, donde detecte que productos hay en los estantes y te avise cuantos hay, cuando comprar nuevos, etc.
+Este lo tenemos algo avanzado, pero tenemos que mejorarlo mucho, porque es muy basico
+Cual crees que sea mejor y por que? el hackathons empieza hoy viernes a las 6 y termina el domingo en la mañana
+6:15 p.m.
+Mi recomendación: Control Parental Inverso
+
+Y aquí está el razonamiento directo:
+
+Por qué es mejor para un hackathon
+
+El hackathon dura ~40 horas. El control de inventario por cámara ya lo tienes "avanzado pero básico" — eso suena a que ya resolviste lo difícil (detección de objetos) y lo que queda es pulirlo, no impresionar. En un hackathon no gana el producto más terminado, gana el que tiene el pitch más poderoso y la idea más memorable.
+
+El control parental inverso tiene algo que el inventario no tiene: narrativa emocional. "Los hijos protegiendo a sus papás de fraudes digitales" es una historia que el jurado va a recordar. Es contracultural, es relevante (fraudes a adultos mayores es un problema enorme y creciente), y tiene un ángulo de IA genuinamente útil.
+
+Por qué el inventario es la opción débil en este contexto
+
+    Ya existe en 50 formas (Amazon Go, sistemas de retail, startups de visión computacional)
+    "Lo teníamos avanzado pero básico" significa que el jurado va a ver exactamente eso: algo básico mejorado a las carreras
+    No tiene diferenciador emocional ni social
+
+Qué haría yo con el control parental inverso en 40 horas
+
+    Core feature: Chat donde el papá describe una situación ("me llegó un mensaje diciendo que gané un premio") y la IA evalúa si es fraude, explica por qué, y sugiere qué hacer
+    Segundo feature: El hijo recibe una notificación/reporte de las consultas del papá
+    Demo en vivo: Casos reales de fraudes comunes en México (SAT falso, IMSS, premio Telcel, etc.) — eso conecta con cualquier jurado mexicano
+
+La IA aquí no es decorativa, es el producto. Eso es exactamente lo que los hackathons de IA buscan premiar.
+
+¿Quieres que te ayude a armar la arquitectura técnica o el pitch para presentar?
+
+Es posible hacerlo en ese tiempo?
+6:18 p.m.
+
+Sí, perfectamente. 40 horas es suficiente si no se dispersan.
+
+Lo que realmente necesitan construir
+
+El core es básicamente un chatbot con un prompt muy bien diseñado + una interfaz limpia. No es un proyecto de 6 meses, es un problema de prompt engineering + UI.
+
+Stack sugerido (mínimo viable ganador)
+
+    Frontend: React o incluso HTML/CSS/JS puro — una pantalla para el papá, una para el hijo
+    Backend: Node.js o Python con FastAPI — solo necesitan un endpoint que llame a Claude o GPT
+    IA: API de Anthropic o OpenAI con un system prompt entrenado en patrones de fraude mexicanos (SAT falso, IMSS, bancos, premios)
+    Notificaciones hijo: Pueden simularlo con una segunda vista en la misma app, no necesitan push notifications reales
+
+División de 40 horas realista
+Bloque	Horas	Qué hacen
+Viernes noche	6h	Diseño de pantallas, prompt engineering, setup del proyecto
+Sábado mañana	6h	Frontend funcional + conexión a API
+Sábado tarde	6h	Vista del hijo + casos de prueba con fraudes reales
+Sábado noche	4h	Pulir UI, manejar errores, preparar demo
+Domingo mañana	2h	Ensayar pitch, slides
+
+Lo que NO deben hacer
+
+    Base de datos compleja
+    Autenticación real
+    App móvil nativa
+    Historial persistente elaborado
+
+¿Cuántas personas son en el equipo y qué skills tienen?
+
+Puedes repetir el analisis buscando en la web las estafas mas usadas hoy en dia e historicamente, y hacer un stack de preguntas de configuracion para que el usuario elimine estafas desde antes que se presenten, por ejemplo, si el usuario solo maneja Santander y le llegan mensajes o cosas de otros bancos saber que es estafa sin necesidad de preguntar al hijo o encargado
+6:35 p.m.
+Se buscó en la web
+
+Perfecto, con datos reales el proyecto se vuelve mucho más sólido. Aquí va el análisis actualizado.
+Las estafas más relevantes hoy (junio 2026)
+
+La gran amenaza nueva: clonación de voz con IA (Deepvoice). Los delincuentes evolucionaron del simple mensaje de texto a la clonación de voz humana mediante IA. Con solo 3 segundos de audio extraídos de un video de TikTok o una historia de Instagram, generan llamadas donde la voz de tu hijo, madre o pareja implora una transferencia urgente por una supuesta crisis médica o legal. Según CONDUSEF y la SSPC, el 90% de las víctimas no logra distinguir la voz sintética de la real. Hubo un aumento del 300% en fraudes mediante Deepvoice, y los bancos en México activarán protocolos de biometría conductual en julio de 2026. En EE.UU., las pérdidas por fraudes con clonación de voz alcanzaron USD 893 millones en el último año según el FBI.
+
+Las clásicas que siguen dominando en México (según Profeco, Condusef y la SSC de CDMX):
+
+    Extorsión digital, phishing o suplantación de identidad, fraudes mediante soporte técnico falso, robo de cuentas y estafas de premios inexistentes
+    Suplantación de operadores telefónicos o soporte técnico: informan sobre fallas y guían a la víctima para instalar apps o compartir códigos, lo que permite el control de la línea
+    Fraude de seguridad social: se hacen pasar por funcionarios que piden actualizar datos de pensión o hacer una supuesta "prueba de vida", dirigido a adultos mayores
+    Correos falsos que suplantan bancos o tiendas departamentales pidiendo verificar contraseñas o números de cuenta
+    Robo de cuenta de WhatsApp: consiguen el número, solicitan registrar la cuenta en otro dispositivo, y ya con el control contactan a familiares pidiendo dinero
+    Mensajes sobre supuestos premios, bloqueos de cuentas o adeudos falsos para generar miedo o urgencia
+
+El patrón común que su IA debe detectar: el objetivo es manipular emociones generando miedo, urgencia o confianza para que la víctima comparta información o transfiera dinero sin verificar. La insistencia en el secreto y la rapidez evita que la víctima consulte a otra persona o pida una verificación simple que derrumbe el montaje.
+El stack de preguntas de configuración (tu "perfil de protección")
+
+Esta es la idea más fuerte que han tenido hasta ahora, y les explico por qué: convierte el sistema de reactivo (preguntar cuando ya llegó la estafa) a preventivo (filtrar automáticamente sin molestar a nadie). El hijo configura el perfil una vez, y la IA usa ese contexto para clasificar todo con confianza casi absoluta.
+
+Aquí el cuestionario de onboarding que armaría, agrupado por categoría:
+
+1. Perfil bancario y financiero
+
+    ¿Qué bancos usa? (multi-select: BBVA, Santander, Banorte, Citibanamex, HSBC, Scotiabank, otros) → Cualquier mensaje de un banco no listado = estafa automática
+    ¿Tiene tarjetas departamentales? (Liverpool, Coppel, Palacio de Hierro) → Mismo filtro
+    ¿Usa apps de banca móvil o solo sucursal? → Si solo va a sucursal, cualquier "actualiza tu app" = estafa
+    ¿Tiene inversiones o criptomonedas? → Si no, cualquier oportunidad de inversión = estafa
+
+2. Perfil gubernamental
+
+    ¿Recibe pensión? ¿De IMSS, ISSSTE o Afore? → Mensajes de pensión de la institución equivocada = estafa
+    ¿Hace su declaración ante el SAT o alguien la hace por él? → "El SAT te debe una devolución" se filtra según esto
+    ¿Está inscrito en programas sociales? (Bienestar, etc.)
+
+3. Perfil de telecomunicaciones y servicios
+
+    ¿Qué compañía de celular usa? (Telcel, Movistar, AT&T) → "Ganaste un premio de Telcel" siendo cliente Movistar = estafa instantánea
+    ¿Qué servicios paga? (CFE, agua, internet — y con qué proveedor) → Adeudos falsos de Totalplay cuando tiene Telmex = filtrado
+    ¿Compra en línea? ¿En qué tiendas? (Amazon, Mercado Libre) → "Tu paquete está detenido" sin compras pendientes = estafa
+
+4. Perfil familiar (el más importante para Deepvoice)
+
+    ¿Quiénes son sus contactos de confianza y sus números reales?
+    Palabra clave familiar: el FBI recomienda acordar una palabra clave familiar para prevenir fraudes de clonación de voz → La app la genera y la guarda; si "el nieto" llama pidiendo dinero, el protocolo es pedir la palabra
+    ¿Algún familiar vive en el extranjero? → Calibra la estafa del "familiar detenido en la frontera"
+    Regla de oro configurada: ninguna transferencia urgente sin verificar por el canal alterno definido (ej. videollamada al número guardado)
+
+5. Perfil de hábitos
+
+    ¿Participa en sorteos o rifas? → Si no: todo premio = estafa, sin excepciones
+    ¿Busca trabajo o ingresos extra? → Filtra "gana $5,000 semanales desde casa"
+    ¿Usa apps de citas? → Activa o desactiva el módulo anti-estafa romántica
+
+Cómo cambia la arquitectura
+
+El flujo ahora tiene 3 capas en vez de 1:
+
+Capa 1 — Filtro automático (sin IA, reglas puras): el mensaje menciona Banorte y el perfil dice "solo Santander" → alerta roja inmediata, ni siquiera gasta tokens. Esto es rápido, gratis y demoable en vivo.
+
+Capa 2 — Análisis con IA + contexto: si el mensaje sí es de una entidad del perfil (un supuesto Santander), la IA analiza con el perfil completo en el system prompt: urgencia, solicitud de datos, links sospechosos, patrones de manipulación emocional.
+
+Capa 3 — Escalamiento al hijo: solo los casos ambiguos llegan al encargado, con el análisis de la IA ya hecho y una recomendación.
+
+Este diseño de 3 capas es oro para el pitch: demuestra que entienden que la IA no debe ser un martillo para todo, y la frase "el 80% de las estafas se bloquea antes de gastar un solo token" suena muy bien frente a un jurado técnico.
+
+Bonus para la demo: incluyan un caso de Deepvoice. Es la estafa de moda en 2026, tiene datos duros recientes de CONDUSEF, y mostrar que su app genera y administra la "palabra clave familiar" del FBI les da un diferenciador que ningún otro equipo va a tener.
+
+¿Quieres que te arme el system prompt completo para la Capa 2 con todos estos patrones de estafa ya integrados? Eso les ahorraría varias horas del viernes en la noche.
+
+Excelente, puedes generarme la arquitectura que podamos usar, tenemos licencias de n8n, de Faces y creditos de AWS
+6:43 p.m.
+
+Perfecto, con ese stack se puede armar algo muy sólido y rápido. Asumo que con "Faces" te refieres a Hugging Face — si es otra cosa, dime y ajusto.
+
+La jugada clave: n8n como cerebro de orquestación (les ahorra escribir un backend completo), AWS Bedrock para el LLM (así queman créditos de AWS en vez de pagar API aparte), y Hugging Face para un modelo especializado que les da el diferenciador técnico.
+
+V
+Conectando a visualize...
+Rol de cada pieza
+
+Frontend — Angular + PrimeNG. Es tu stack diario, así que aquí no pierden tiempo aprendiendo nada. Dos vistas: la del papá (chat simple, botón de "pegar mensaje sospechoso", subir audio) y la del hijo (dashboard con alertas y configuración del perfil). Despliegan a S3 + CloudFront con los créditos de AWS — es estático, barato y se sube en 10 minutos.
+
+n8n — el corazón del sistema. Aquí está el truco que les ahorra el backend completo. Cada flujo es un workflow:
+
+    Workflow "Analizar mensaje": Webhook recibe { texto, userId } → nodo que consulta el perfil en DynamoDB → nodo IF con las reglas de Capa 1 (¿menciona un banco que no está en el perfil? ¿una telefónica que no usa? ¿un premio cuando no participa en sorteos?) → si es estafa obvia, responde alerta roja directo. Si pasa el filtro, nodo HTTP a Bedrock con el perfil inyectado en el system prompt → parsea el JSON de respuesta → responde al frontend y, si el veredicto es "sospechoso" o "ambiguo", dispara el workflow de notificación.
+    Workflow "Onboarding": recibe las respuestas del cuestionario de configuración y guarda el perfil en DynamoDB.
+    Workflow "Notificar": manda WhatsApp (vía Twilio o WhatsApp Business API — n8n tiene nodos nativos) o, si no les da tiempo de configurar eso, un correo con SES de AWS, que es trivial.
+    Workflow "Analizar audio" (el diferenciador): recibe el audio de una llamada sospechosa → lo manda al modelo de Hugging Face → combina el score de "voz sintética" con el análisis de contexto de Bedrock.
+
+AWS Bedrock — el LLM. Invocan Claude vía la API de Bedrock con sus créditos, sin necesidad de una API key de Anthropic aparte. El system prompt lleva: el perfil de protección completo del papá, el catálogo de patrones de estafa (los que investigamos: SAT, IMSS, deepvoice, robo de WhatsApp, premios, soporte técnico falso), y la instrucción de responder solo JSON con { veredicto, confianza, razones, accion_recomendada, escalar_a_hijo }.
+
+Hugging Face — detección de voz clonada. Hay modelos de audio deepfake detection listos para usar en el Inference API (busquen "audio deepfake detection" o modelos tipo wav2vec fine-tuneados para anti-spoofing). El papá sube el audio de WhatsApp de "su nieto" pidiendo dinero, el modelo regresa probabilidad de voz sintética. Aunque la precisión no sea perfecta, para la demo del hackathon es el momento wow: nadie más va a tener eso.
+
+DynamoDB — el perfil. Una sola tabla, un solo item por usuario con todo el JSON del perfil (bancos, telefónica, pensión, contactos de confianza, palabra clave familiar). Serverless, gratis en free tier, cero administración.
+Orden de construcción recomendado
+
+Viernes en la noche: workflows 1 y 2 de n8n + system prompt de Bedrock (con esto ya tienen el core funcionando y probable por Postman, sin frontend). Sábado en la mañana: frontend Angular conectado a los webhooks. Sábado en la tarde: workflow de audio con Hugging Face + notificaciones. Sábado en la noche: pulir, casos de demo, manejo de errores. Así, si el sábado en la tarde algo se atora con Hugging Face, lo recortan y el producto sigue completo — la detección de voz es el cherry on top, no el fundamento.
+
+Un detalle práctico: si su licencia de n8n es self-hosted, levántenla en un EC2 chico o en ECS con los créditos, o más fácil aún, córranla local con ngrok para exponer los webhooks durante la demo. Para un hackathon, local + ngrok es perfectamente válido y les ahorra horas de DevOps.
+
+¿Te genero ahora el system prompt completo de Bedrock con el esquema JSON de respuesta y los patrones de estafa integrados?
+
+No, Faces es una aplicacion para hacer presentaciones, no ese que pusiste, puedes hacer el workflow otra vez?
+7:10 p.m.
+
+Ah, entendido — Faces es para la presentación del pitch, no parte del stack técnico. Eso simplifica la arquitectura (queda 100% en n8n + AWS) y de hecho les resuelve el domingo en la mañana. Para no perder el análisis de audios sospechosos, lo cubrimos con Amazon Transcribe: convierte el audio a texto y Bedrock analiza el guion de la llamada buscando los patrones de manipulación (urgencia, secreto, petición de dinero). Aquí va el workflow corregido:
+
+V
+Conectando a visualize...
+Qué cambió
+
+Sale Hugging Face, entra Amazon Transcribe. Cuando el papá sube el audio de WhatsApp del "nieto pidiendo dinero", el flujo es: n8n sube el audio a S3 → Transcribe lo convierte a texto → Bedrock analiza la transcripción con el perfil. La IA no detecta si la voz es sintética, pero detecta lo que realmente delata al Deepvoice: el guion. Urgencia extrema, petición de secreto, transferencia inmediata, métodos de pago raros — y verifica contra el perfil ("¿tu nieto real te pediría dinero por este canal? Llámalo al número guardado y pide la palabra clave"). Para la demo, ese flujo es igual de impactante y mucho más confiable de implementar en un fin de semana. Bonus: todo queda dentro de AWS, así que los créditos cubren el 100% del proyecto.
+
+Faces entra al final, no a la arquitectura. Su lugar es el domingo en la mañana: con la app ya funcionando, le pasan a Faces el guion del pitch y les genera la presentación visual en minutos. Eso les libera el sábado en la noche para pulir producto en vez de hacer slides.
+
+El resto queda igual: Angular + PrimeNG en S3/CloudFront, n8n como orquestador con las reglas de Capa 1, DynamoDB con el perfil de protección, y la notificación al hijo por WhatsApp (o SES como plan B rápido).
+
+Un ajuste al plan de tiempos: el workflow de audio (S3 + Transcribe + Bedrock) métanlo el sábado en la tarde como estaba el de Hugging Face — si se complica, el producto sin audio sigue estando completo.
+
+¿Seguimos con el system prompt de Bedrock, o prefieres que te arme primero el guion del pitch para meterlo a Faces?
+

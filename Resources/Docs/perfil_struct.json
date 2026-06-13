@@ -1,0 +1,50 @@
+{
+    "profileId": "uuid-v4",
+    "createdAt": "2026-06-12T00:00:00Z",
+    "updatedAt": "2026-06-12T00:00:00Z",
+  
+    "banking": {
+      "banks": ["BBVA", "Santander", "Banorte", "Citibanamex", "HSBC", "Scotiabank"],
+      "departmentCards": ["Liverpool", "Coppel", "Palacio de Hierro"],
+      "usesMobileBanking": true,
+      "hasInvestments": false,
+      "hasCrypto": false
+    },
+  
+    "government": {
+      "receivesPension": true,
+      "pensionProvider": "IMSS",
+      "filesTaxesPersonally": false,
+      "enrolledInSocialPrograms": ["Bienestar"]
+    },
+  
+    "telecom": {
+      "mobileCarrier": "Telcel",
+      "internetProvider": "Telmex",
+      "utilityProviders": {
+        "electricity": "CFE",
+        "water": "SACMEX"
+      },
+      "shopsOnline": true,
+      "onlineStores": ["Amazon", "Mercado Libre"]
+    },
+  
+    "family": {
+      "trustedContacts": [
+        {
+          "name": "Daniel",
+          "relationship": "hijo",
+          "phone": "+52-33-XXXX-XXXX"
+        }
+      ],
+      "familyKeyword": "aguacate",
+      "hasRelativesAbroad": false,
+      "emergencyVerificationChannel": "videollamada"
+    },
+  
+    "habits": {
+      "participatesInRaffles": false,
+      "lookingForWork": false,
+      "usesDatingApps": false
+    }
+  }

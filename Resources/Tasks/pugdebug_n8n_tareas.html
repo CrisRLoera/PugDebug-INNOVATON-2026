@@ -1,0 +1,255 @@
+
+<h2 class="sr-only">Lista de tareas por integrante para construir los workflows de n8n en el hackathon</h2>
+<style>
+* { box-sizing: border-box; }
+.tab-row { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); background: transparent; transition: background .15s, color .15s; }
+.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.wf-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 12px; overflow: hidden; }
+.wf-header { padding: 10px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.wf-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.wf-body { padding: 0 14px 12px; }
+.task-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; color: var(--color-text-primary); }
+.task-item:last-child { border-bottom: none; }
+.task-item input[type=checkbox] { margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+.task-note { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; flex-shrink: 0; }
+.b-purple { background: #CECBF6; color: #3C3489; }
+.b-teal   { background: #9FE1CB; color: #085041; }
+.b-coral  { background: #F5C4B3; color: #712B13; }
+.b-blue   { background: #B5D4F4; color: #0C447C; }
+.b-amber  { background: #FAC775; color: #633806; }
+.b-green  { background: #C0DD97; color: #27500A; }
+.b-gray   { background: #D3D1C7; color: #444441; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; flex-shrink: 0; }
+.progress-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 12px; color: var(--color-text-secondary); }
+.prog-bg { flex: 1; height: 5px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 5px; border-radius: 3px; transition: width .3s; }
+</style>
+
+<div class="tab-row">
+  <button class="tab active" onclick="show('all')">Todos los workflows</button>
+  <button class="tab" onclick="show('axel')">Axel</button>
+  <button class="tab" onclick="show('daniel')">Daniel</button>
+  <button class="tab" onclick="show('angelica')">Angélica</button>
+  <button class="tab" onclick="show('cristian')">Cristian</button>
+</div>
+
+<div id="panel-all" class="panel active">
+  <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:14px">4 workflows de n8n Cloud Pro — stack: n8n + AWS Bedrock + DynamoDB + S3 + Transcribe + SES</div>
+
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)">
+      <span class="badge b-purple">WF 1</span>
+      <span class="wf-title">Onboarding — Configurar perfil de protección</span>
+      <span style="font-size:12px;color:var(--color-text-secondary)">Viernes noche</span>
+    </div>
+    <div class="wf-body">
+      <div style="font-size:12px;color:var(--color-text-secondary);padding:8px 0 4px">Webhook → guardar JSON de perfil en DynamoDB (bancos, telefónica, contactos de confianza, palabra clave familiar)</div>
+      <div class="task-item"><input type="checkbox"><div><div>Crear nodo Webhook POST <code>/onboarding</code> en n8n Cloud</div><div class="task-note">Recibe el JSON completo del cuestionario de configuración del papá</div></div><span class="badge b-coral" style="margin-left:auto">Angélica</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo AWS DynamoDB → operación PutItem con el perfil serializado</div><div class="task-note">Tabla: <code>ProtectionProfiles</code>, PK: <code>userId</code></div></div><span class="badge b-coral" style="margin-left:auto">Angélica</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Configurar credenciales AWS en n8n Cloud (Access Key + Secret)</div><div class="task-note">Settings → Credentials → AWS</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Probar el webhook con Postman enviando un perfil de prueba</div><div class="task-note">Verificar que el item aparezca en DynamoDB</div></div><span class="badge b-coral" style="margin-left:auto">Angélica</span></div>
+    </div>
+  </div>
+
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)">
+      <span class="badge b-teal">WF 2</span>
+      <span class="wf-title">Analizar mensaje — El motor principal (3 capas)</span>
+      <span style="font-size:12px;color:var(--color-text-secondary)">Viernes noche → Sáb mañana</span>
+    </div>
+    <div class="wf-body">
+      <div style="font-size:12px;color:var(--color-text-secondary);padding:8px 0 4px">Webhook → leer perfil → Capa 1 (reglas IF) → Capa 2 (Bedrock) → Capa 3 (escalar al hijo)</div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Webhook POST <code>/analizar</code> — recibe <code>{texto, userId}</code></div></div><span class="badge b-purple" style="margin-left:auto">Axel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo DynamoDB GetItem → recuperar perfil del usuario por <code>userId</code></div></div><span class="badge b-purple" style="margin-left:auto">Axel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo IF — Capa 1: reglas sin IA (banco no en perfil, telefónica equivocada, premio sin sorteos)</div><div class="task-note">Si se detecta fraude obvio → responder alerta roja sin gastar tokens de Bedrock</div></div><span class="badge b-teal" style="margin-left:auto">Daniel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → AWS Bedrock (Claude vía API Bedrock)</div><div class="task-note">System prompt con perfil completo + catálogo de estafas. Respuesta: JSON con <code>{veredicto, confianza, razones, accion_recomendada, escalar_a_hijo}</code></div></div><span class="badge b-teal" style="margin-left:auto">Daniel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Code (JS) → parsear respuesta JSON de Bedrock y preparar payload de respuesta al frontend</div></div><span class="badge b-teal" style="margin-left:auto">Daniel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo IF — ¿escalar_a_hijo = true? → conectar con WF 4 (Notificaciones)</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Respond to Webhook → devolver resultado al frontend en &lt;2 segundos</div></div><span class="badge b-purple" style="margin-left:auto">Axel</span></div>
+    </div>
+  </div>
+
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)">
+      <span class="badge b-blue">WF 3</span>
+      <span class="wf-title">Notificar al hijo — Alerta por correo (SES)</span>
+      <span style="font-size:12px;color:var(--color-text-secondary)">Sábado mañana</span>
+    </div>
+    <div class="wf-body">
+      <div style="font-size:12px;color:var(--color-text-secondary);padding:8px 0 4px">Cuando Bedrock decide escalar → enviar alerta al hijo con resumen del análisis via Amazon SES</div>
+      <div class="task-item"><input type="checkbox"><div><div>Configurar Amazon SES en n8n Cloud (credenciales AWS, región us-east-1)</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo SES → enviar correo al hijo con: mensaje analizado, veredicto de la IA, razones y acción recomendada</div><div class="task-note">Usar template HTML simple con color rojo/amarillo según nivel de riesgo</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Code → construir el HTML del correo con los datos del análisis formateados</div></div><span class="badge b-teal" style="margin-left:auto">Daniel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Probar el flujo completo: mensaje de prueba → Bedrock escala → correo llega al hijo</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+    </div>
+  </div>
+
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)">
+      <span class="badge b-amber">WF 4</span>
+      <span class="wf-title">Analizar audio — Transcribe + Bedrock</span>
+      <span style="font-size:12px;color:var(--color-text-secondary)">Sábado tarde (cherry on top)</span>
+    </div>
+    <div class="wf-body">
+      <div style="font-size:12px;color:var(--color-text-secondary);padding:8px 0 4px">El papá sube audio de WhatsApp sospechoso → S3 → Amazon Transcribe → texto → Bedrock analiza el guion</div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Webhook POST <code>/analizar-audio</code> — recibe archivo de audio (base64 o multipart)</div></div><span class="badge b-coral" style="margin-left:auto">Angélica</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → subir audio a S3 (PUT presigned URL o SDK)</div><div class="task-note">Bucket: <code>hackathon-audios</code>, usar créditos AWS</div></div><span class="badge b-coral" style="margin-left:auto">Angélica</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → Amazon Transcribe StartTranscriptionJob con el S3 URI</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Wait + Loop → polling de Transcribe hasta que el job esté COMPLETED</div><div class="task-note">n8n Cloud Pro tiene nodo Wait nativo — espera 5s entre intentos</div></div><span class="badge b-blue" style="margin-left:auto">Cristian</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → Bedrock con la transcripción + perfil: detectar urgencia, secreto, petición de dinero, canal inusual</div></div><span class="badge b-teal" style="margin-left:auto">Daniel</span></div>
+      <div class="task-item"><input type="checkbox"><div><div>Responder al frontend con veredicto + frase de acción ("Llama a tu nieto al número guardado y pide la palabra clave")</div></div><span class="badge b-coral" style="margin-left:auto">Angélica</span></div>
+    </div>
+  </div>
+  
+</div>
+
+<div id="panel-axel" class="panel">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div class="avatar" style="background:#CECBF6;color:#3C3489">AX</div>
+    <div>
+      <div style="font-size:15px;font-weight:500;color:var(--color-text-primary)">Axel — Backend / integración principal</div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">Responsable del esqueleto de WF 2 (el workflow más crítico)</div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-purple">WF 1</span><span class="wf-title">Setup inicial de n8n Cloud Pro</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Crear cuenta en n8n Cloud Pro y compartir acceso al equipo</div><div class="task-note">Settings → Users → Invite — todos necesitan acceso</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Configurar variable de entorno <code>WEBHOOK_BASE_URL</code> en n8n Cloud</div><div class="task-note">Será la URL base que le pasarás al frontend de Daniel</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-teal">WF 2</span><span class="wf-title">Nodos de entrada y salida del workflow principal</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Crear nodo Webhook POST <code>/analizar</code> con respuesta en modo "Last node"</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo DynamoDB GetItem → recuperar perfil con el <code>userId</code> del request</div><div class="task-note">Si el perfil no existe → responder con error claro: "Usuario no configurado"</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo final Respond to Webhook → devolver JSON unificado al frontend</div><div class="task-note"><code>{alerta, nivel, mensaje_para_papa, mensaje_para_hijo, escalo}</code></div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Activar el workflow y entregar la URL del webhook a Daniel</div></div></div>
+    </div>
+  </div>
+  <button style="margin-top:8px;font-size:13px" onclick="sendPrompt('Cómo configurar el nodo DynamoDB GetItem en n8n Cloud Pro paso a paso?')">Guía nodo DynamoDB ↗</button>
+</div>
+
+<div id="panel-daniel" class="panel">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div class="avatar" style="background:#9FE1CB;color:#085041">DA</div>
+    <div>
+      <div style="font-size:15px;font-weight:500;color:var(--color-text-primary)">Daniel — IA / Frontend / Lógica de negocio</div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">Dueño de la Capa 1 (reglas), Capa 2 (Bedrock) y el frontend Angular</div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-teal">WF 2</span><span class="wf-title">Capa 1 — Reglas sin IA</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Nodo IF: ¿el texto menciona una entidad que NO está en el perfil?</div><div class="task-note">Ej: menciona "Banorte" y el perfil dice ["Santander"] → alerta roja directa</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo IF encadenado: ¿menciona "premio", "ganador", "sorteo" y el perfil dice no participa en rifas?</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo IF: ¿menciona compra/paquete y el perfil dice no compra en línea?</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Respond to Webhook en la rama de fraude obvio → <code>{nivel: "rojo", capa: 1}</code> sin llamar a Bedrock</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-teal">WF 2</span><span class="wf-title">Capa 2 — Integración con AWS Bedrock</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → POST a Bedrock endpoint con el system prompt + perfil + texto</div><div class="task-note">URL: <code>https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet.../invoke</code></div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Escribir el system prompt de Bedrock con perfil, catálogo de estafas y formato JSON de respuesta</div><div class="task-note">Este es el trabajo más importante de Daniel — define la calidad del producto</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Code (JS) → <code>JSON.parse()</code> de la respuesta de Bedrock, manejar errores de parseo</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-amber">Frontend</span><span class="wf-title">Angular — Pantalla del papá y del hijo</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Componente del papá: textarea para pegar mensaje + botón "Analizar" → POST al webhook de Axel</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Mostrar resultado: semáforo (rojo/amarillo/verde) + mensaje explicativo en lenguaje simple</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Componente del hijo: listado de últimas alertas recibidas (puede ser mock con localStorage)</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Deploy a S3 + CloudFront con los créditos AWS</div><div class="task-note"><code>ng build --prod</code> → subir dist/ a bucket S3 público → activar CloudFront</div></div></div>
+    </div>
+  </div>
+  <button style="margin-top:8px;font-size:13px" onclick="sendPrompt('Escríbeme el system prompt completo de Bedrock para el Control Parental Inverso con el catálogo de estafas mexicanas')">Generar system prompt ↗</button>
+</div>
+
+<div id="panel-angelica" class="panel">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div class="avatar" style="background:#F5C4B3;color:#712B13">AN</div>
+    <div>
+      <div style="font-size:15px;font-weight:500;color:var(--color-text-primary)">Angélica — Backend / Hardware / QA</div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">Dueña del WF 1 (onboarding) y WF 3 (audio)</div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-purple">WF 1</span><span class="wf-title">Onboarding — Guardar perfil del papá</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Crear el workflow de onboarding en n8n Cloud: Webhook → Set → DynamoDB PutItem</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Definir el esquema JSON del perfil: bancos, telefónica, pensión, contactos, palabra clave, hábitos</div><div class="task-note">Este JSON es el que el cuestionario del frontend de Daniel enviará</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Probar con Postman: enviar perfil real → verificar item en DynamoDB consola AWS</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-amber">WF 3</span><span class="wf-title">Analizar audio sospechoso</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Webhook POST <code>/analizar-audio</code> → recibir archivo de audio del frontend</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → subir el audio a S3 con AWS SDK o presigned URL</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Recibir transcripción de Cristian y conectar el output con el nodo de Bedrock de Daniel</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Construir el Respond to Webhook con el veredicto final del audio</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-green">QA</span><span class="wf-title">Testing end-to-end antes de la demo</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Probar los 5 casos de fraude más comunes: SAT falso, IMSS, premio Telcel, robo WhatsApp, Deepvoice</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Verificar que los 4 workflows estén activos y respondan antes de subir al escenario</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Grabar video de backup de la demo funcionando (por si el wifi falla)</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-cristian" class="panel">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div class="avatar" style="background:#B5D4F4;color:#0C447C">CR</div>
+    <div>
+      <div style="font-size:15px;font-weight:500;color:var(--color-text-primary)">Cristian — Infra / Seguridad / Notificaciones</div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">Dueño del WF 4 (SES) y de la capa de transcripción de audio</div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-blue">Infra</span><span class="wf-title">Setup AWS y credenciales en n8n</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Crear IAM user con permisos mínimos: DynamoDB, S3, Transcribe, SES, Bedrock</div><div class="task-note">No usar root credentials — crear usuario específico para el hackathon</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Configurar credenciales AWS en n8n Cloud (Access Key + Secret + región us-east-1)</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Crear tabla DynamoDB <code>ProtectionProfiles</code> con PK: <code>userId</code> (String)</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Crear bucket S3 <code>hackathon-audios</code> con CORS configurado para el frontend</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Habilitar Amazon Bedrock en la consola AWS (requiere aprobación manual — hacer esto primero)</div><div class="task-note">Puede tardar 15-30 minutos, hacerlo al llegar al evento</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-amber">WF 3</span><span class="wf-title">Amazon Transcribe en el workflow de audio</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → StartTranscriptionJob con el S3 URI del audio subido por Angélica</div><div class="task-note">Idioma: <code>es-MX</code> — especificar español mexicano mejora la precisión</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo Wait 5s + Loop → GetTranscriptionJob hasta status COMPLETED</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo HTTP Request → descargar el JSON de resultado desde la URL de S3 que devuelve Transcribe</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Extraer el texto transcrito y pasarlo al nodo de Bedrock de Daniel</div></div></div>
+    </div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-header" style="background:var(--color-background-secondary)"><span class="badge b-blue">WF 4</span><span class="wf-title">Notificaciones al hijo via Amazon SES</span></div>
+    <div class="wf-body">
+      <div class="task-item"><input type="checkbox"><div><div>Verificar el correo del hijo en SES (sandbox mode — ambos correos deben estar verificados)</div><div class="task-note">En sandbox no se puede enviar a correos no verificados — verificar los de demo</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo SES → enviar correo con el HTML que construye Daniel</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Nodo IF antes del SES → solo enviar si <code>escalar_a_hijo = true</code> (no spamear en cada consulta)</div></div></div>
+      <div class="task-item"><input type="checkbox"><div><div>Probar: mensaje de "Banorte" siendo cliente Santander → Bedrock escala → correo llega</div></div></div>
+    </div>
+  </div>
+  <button style="margin-top:8px;font-size:13px" onclick="sendPrompt('Cuáles son los permisos IAM mínimos que necesito para DynamoDB, S3, Transcribe, SES y Bedrock en AWS?')">Generar política IAM ↗</button>
+</div>
+
+<script>
+function show(tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
