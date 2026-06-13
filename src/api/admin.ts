@@ -30,7 +30,7 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
     await delay();
     return MOCK_ADMIN_USERS;
   }
-  return post<AdminUser[]>(BASE_URL.admin.users, {});
+  return get<AdminUser[]>(BASE_URL.admin.users);
 }
 
 export async function getCatalogs(): Promise<Catalogs> {
