@@ -19,13 +19,13 @@ function Layout() {
       className: location.pathname === '/playground' ? 'is-active' : '',
     },
     {
-      label: 'Log in',
+      label: 'Iniciar sesión',
       icon: 'pi pi-sign-in',
       command: () => navigate('/login'),
       className: location.pathname === '/login' ? 'is-active' : '',
     },
     {
-      label: 'Sign up',
+      label: 'Regístrate',
       icon: 'pi pi-user-plus',
       command: () => navigate('/signup'),
       className: location.pathname === '/signup' ? 'is-active' : '',

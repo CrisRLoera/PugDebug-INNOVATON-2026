@@ -38,13 +38,13 @@ function Login() {
     const nextErrors: LoginErrors = {};
 
     if (!values.identifier.trim()) {
-      nextErrors.identifier = "Email or phone is required.";
+      nextErrors.identifier = "El correo o teléfono es obligatorio.";
     } else if (!isEmailOrPhone(values.identifier)) {
-      nextErrors.identifier = "Enter a valid email or phone number.";
+      nextErrors.identifier = "Ingresa un correo o teléfono válido.";
     }
 
     if (!values.password) {
-      nextErrors.password = "Password is required.";
+      nextErrors.password = "La contraseña es obligatoria.";
     }
 
     return nextErrors;
@@ -69,20 +69,20 @@ function Login() {
   return (
     <div className="auth-screen">
       <section className="auth-card" aria-labelledby="login-title">
-        <p className="eyebrow">Welcome back</p>
-        <h1 id="login-title">Log in</h1>
+        <p className="eyebrow">Bienvenido de nuevo</p>
+        <h1 id="login-title">Iniciar sesión</h1>
         <p className="intro">
-          Use your email or phone number and your password.
+          Usa tu correo o teléfono junto con tu contraseña.
         </p>
 
         <form className="auth-form" onSubmit={onSubmit} noValidate>
           <div className="field-row">
-            <label htmlFor="login-identifier">Email or phone</label>
+            <label htmlFor="login-identifier">Correo o teléfono</label>
             <InputText
               id="login-identifier"
               value={form.identifier}
               onChange={(event) => setField("identifier", event.target.value)}
-              placeholder="jane@company.com or +1 555 123 4567"
+              placeholder="nombre@correo.com o 555 123 4567"
               aria-invalid={Boolean(errors.identifier)}
             />
             {errors.identifier && (
@@ -91,13 +91,13 @@ function Login() {
           </div>
 
           <div className="field-row">
-            <label htmlFor="login-password">Password</label>
+            <label htmlFor="login-password">Contraseña</label>
             <InputText
               id="login-password"
               type="password"
               value={form.password}
               onChange={(event) => setField("password", event.target.value)}
-              placeholder="Your password"
+              placeholder="Tu contraseña"
               aria-invalid={Boolean(errors.password)}
             />
             {errors.password && (
@@ -105,17 +105,17 @@ function Login() {
             )}
           </div>
 
-          <Button type="submit" label="Log in" icon="pi pi-sign-in" />
+          <Button type="submit" label="Iniciar sesión" icon="pi pi-sign-in" />
         </form>
 
         <div className="auth-links">
-          <Link to="/signup">Need an account? Sign up</Link>
-          <Link to="/">Back to home</Link>
+          <Link to="/signup">¿No tienes cuenta? Regístrate</Link>
+          <Link to="/">Volver al inicio</Link>
         </div>
 
         {submitted && isValid && (
           <p className="field-success">
-            Login form is valid and ready to submit.
+            El formulario de inicio de sesión es válido y está listo para enviarse.
           </p>
         )}
       </section>

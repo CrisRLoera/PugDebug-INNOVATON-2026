@@ -40,25 +40,25 @@ function Signup() {
     const nextErrors: SignupErrors = {};
 
     if (!values.fullName.trim()) {
-      nextErrors.fullName = "Full name is required.";
+      nextErrors.fullName = "El nombre completo es obligatorio.";
     }
 
     if (!values.email.trim()) {
-      nextErrors.email = "Email is required.";
+      nextErrors.email = "El correo electrónico es obligatorio.";
     } else if (!EMAIL_REGEX.test(values.email.trim())) {
-      nextErrors.email = "Enter a valid email address.";
+      nextErrors.email = "Ingresa un correo electrónico válido.";
     }
 
     if (!values.phone.trim()) {
-      nextErrors.phone = "Phone number is required.";
+      nextErrors.phone = "El número de teléfono es obligatorio.";
     } else if (!PHONE_REGEX.test(normalizePhone(values.phone))) {
-      nextErrors.phone = "Enter a valid phone number.";
+      nextErrors.phone = "Ingresa un número de teléfono válido.";
     }
 
     if (!values.password) {
-      nextErrors.password = "Password is required.";
+      nextErrors.password = "La contraseña es obligatoria.";
     } else if (values.password.length < 8) {
-      nextErrors.password = "Password must be at least 8 characters.";
+      nextErrors.password = "La contraseña debe tener al menos 8 caracteres.";
     }
 
     return nextErrors;
@@ -83,18 +83,18 @@ function Signup() {
   return (
     <div className="auth-screen">
       <section className="auth-card" aria-labelledby="signup-title">
-        <p className="eyebrow">Create account</p>
-        <h1 id="signup-title">Sign up</h1>
-        <p className="intro">Use your details to set up your account.</p>
+        <p className="eyebrow">Crear cuenta</p>
+        <h1 id="signup-title">Regístrate</h1>
+        <p className="intro">Usa tus datos para crear tu cuenta.</p>
 
         <form className="auth-form" onSubmit={onSubmit} noValidate>
           <div className="field-row">
-            <label htmlFor="full-name">Full name</label>
+            <label htmlFor="full-name">Nombre completo</label>
             <InputText
               id="full-name"
               value={form.fullName}
               onChange={(event) => setField("fullName", event.target.value)}
-              placeholder="Jane Doe"
+              placeholder="Nombre Apellido"
               aria-invalid={Boolean(errors.fullName)}
             />
             {errors.fullName && (
@@ -103,13 +103,13 @@ function Signup() {
           </div>
 
           <div className="field-row">
-            <label htmlFor="signup-email">Email</label>
+            <label htmlFor="signup-email">Correo electrónico</label>
             <InputText
               id="signup-email"
               type="email"
               value={form.email}
               onChange={(event) => setField("email", event.target.value)}
-              placeholder="jane@company.com"
+              placeholder="nombre@correo.com"
               aria-invalid={Boolean(errors.email)}
             />
             {errors.email && (
@@ -118,12 +118,12 @@ function Signup() {
           </div>
 
           <div className="field-row">
-            <label htmlFor="signup-phone">Phone number</label>
+            <label htmlFor="signup-phone">Número de teléfono</label>
             <InputText
               id="signup-phone"
               value={form.phone}
               onChange={(event) => setField("phone", event.target.value)}
-              placeholder="+1 555 123 4567"
+              placeholder="555 123 4567"
               aria-invalid={Boolean(errors.phone)}
             />
             {errors.phone && (
@@ -132,13 +132,13 @@ function Signup() {
           </div>
 
           <div className="field-row">
-            <label htmlFor="signup-password">Password</label>
+            <label htmlFor="signup-password">Contraseña</label>
             <InputText
               id="signup-password"
               type="password"
               value={form.password}
               onChange={(event) => setField("password", event.target.value)}
-              placeholder="Minimum 8 characters"
+              placeholder="Mínimo 8 caracteres"
               aria-invalid={Boolean(errors.password)}
             />
             {errors.password && (
@@ -146,17 +146,17 @@ function Signup() {
             )}
           </div>
 
-          <Button type="submit" label="Create account" icon="pi pi-user-plus" />
+          <Button type="submit" label="Crear cuenta" icon="pi pi-user-plus" />
         </form>
 
         <div className="auth-links">
-          <Link to="/login">Already have an account? Log in</Link>
-          <Link to="/">Back to home</Link>
+          <Link to="/login">¿Ya tienes cuenta? Inicia sesión</Link>
+          <Link to="/">Volver al inicio</Link>
         </div>
 
         {submitted && isValid && (
           <p className="field-success">
-            Signup form is valid and ready to submit.
+            El formulario de registro es válido y está listo para enviarse.
           </p>
         )}
       </section>
