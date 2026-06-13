@@ -1,4 +1,4 @@
-import { USE_MOCK, BASE_URL, post } from "./client";
+import { USE_MOCK, BASE_URL, post, get } from "./client";
 import { MOCK_METRICS, MOCK_ADMIN_USERS } from "../mock/admin";
 import {
   MOCK_BANKS,
@@ -48,7 +48,7 @@ export async function getCatalogs(): Promise<Catalogs> {
       onlineStores: [...MOCK_ONLINE_STORES],
     };
   }
-  return post<Catalogs>(BASE_URL.admin.catalogs.list, {});
+  return get<Catalogs>(BASE_URL.admin.catalogs.list);
 }
 
 export async function createCatalogItem(
