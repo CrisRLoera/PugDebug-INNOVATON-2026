@@ -5,6 +5,7 @@ import { Step2Protected } from './Step2Protected';
 import { Step3Profile } from './Step3Profile';
 import { submitOnboarding } from '../../../api/onboarding';
 import { useAuth } from '../../../context/AuthContext';
+import pugLogo from '../../../assets/pug-logo.jpeg';
 import type { AccountData } from './Step1Account';
 import type { ProtectedPerson, ProtectionProfile } from '../../../types';
 
@@ -58,29 +59,27 @@ export function SignupWizard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F5EFD6] via-purple-50 to-purple-100 flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         {/* Brand */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-9 h-9 rounded-xl bg-blue-700 flex items-center justify-center shadow">
-            <i className="pi pi-shield text-white" />
-          </div>
+          <img src={pugLogo} alt="PugGuardian" className="w-12 h-12 rounded-full object-cover shadow" />
           <span className="font-bold text-slate-900 text-xl">PugGuardian</span>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-purple-100 p-6">
           {/* Progress */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               {STEPS.map((s, i) => (
                 <div key={s} className="flex items-center gap-2 flex-1 last:flex-none">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 transition-all
-                    ${i < step ? 'bg-blue-700 text-white' : i === step ? 'bg-blue-700 text-white ring-4 ring-blue-100' : 'bg-slate-200 text-slate-500'}`}>
+                    ${i < step ? 'bg-purple-700 text-white' : i === step ? 'bg-purple-700 text-white ring-4 ring-purple-100' : 'bg-slate-200 text-slate-500'}`}>
                     {i < step ? <i className="pi pi-check text-xs" /> : i + 1}
                   </div>
                   {i < STEPS.length - 1 && (
-                    <div className={`flex-1 h-0.5 rounded transition-all ${i < step ? 'bg-blue-700' : 'bg-slate-200'}`} />
+                    <div className={`flex-1 h-0.5 rounded transition-all ${i < step ? 'bg-purple-700' : 'bg-slate-200'}`} />
                   )}
                 </div>
               ))}
@@ -122,7 +121,7 @@ export function SignupWizard() {
 
         <p className="text-center text-sm text-slate-600 mt-6">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="text-blue-700 font-semibold hover:text-blue-800 transition-colors">
+          <Link to="/login" className="text-purple-700 font-semibold hover:text-purple-800 transition-colors">
             Iniciar sesión
           </Link>
         </p>

@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  /* PugGuardian brand purple — overrides Tailwind's default purple scale */
+  --color-purple-50: #f3eeff;
+  --color-purple-100: #e8daf5;
+  --color-purple-200: #d1b8ec;
+  --color-purple-300: #b490e1;
+  --color-purple-400: #9a6fd0;
+  --color-purple-500: #8252bd;
+  --color-purple-600: #7047a8;
+  --color-purple-700: #6b4fa0;
+  --color-purple-800: #573d88;
+  --color-purple-900: #432c6a;
+}
+
 /* Keep PrimeIcons rendering correctly alongside Tailwind */
 *, *::before, *::after {
   box-sizing: border-box;

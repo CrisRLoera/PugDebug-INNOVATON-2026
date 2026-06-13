@@ -63,7 +63,7 @@ export function Step1Account({ initial, onNext }: Props) {
         className={`w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all
           ${errors[field]
             ? 'border-red-400 ring-1 ring-red-300'
-            : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+            : 'border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100'
           }`}
       />
       {errors[field] && <p className="mt-1.5 text-xs text-red-600">{errors[field]}</p>}
@@ -86,7 +86,7 @@ export function Step1Account({ initial, onNext }: Props) {
       <div className="pt-2">
         <button
           type="submit"
-          className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+          className="w-full bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
         >
           Continuar
           <i className="pi pi-arrow-right" />

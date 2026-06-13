@@ -27,7 +27,7 @@ export function UserList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-700" />
       </div>
     );
   }
@@ -45,7 +45,7 @@ export function UserList() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar usuario..."
-            className="w-full pl-9 pr-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full pl-9 pr-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
           />
         </div>
       </div>
@@ -63,7 +63,7 @@ export function UserList() {
                 onClick={() => setExpandedId(expandedId === u.id ? null : u.id)}
                 className="w-full text-left px-5 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors"
               >
-                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {u.fullName.split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">

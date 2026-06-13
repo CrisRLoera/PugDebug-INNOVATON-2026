@@ -37,7 +37,7 @@ export function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-700" />
       </div>
     );
   }
@@ -52,7 +52,7 @@ export function AdminDashboard() {
       {/* Metrics */}
       {metrics && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-          <MetricCard label="Usuarios totales" value={metrics.totalUsers} icon="pi-users" color="bg-blue-100 text-blue-600" />
+          <MetricCard label="Usuarios totales" value={metrics.totalUsers} icon="pi-users" color="bg-purple-100 text-purple-600" />
           <MetricCard label="Análisis realizados" value={metrics.totalAnalyses} icon="pi-search" color="bg-violet-100 text-violet-600" />
           <MetricCard label="Estafas detectadas" value={metrics.fraudsDetected} icon="pi-ban" color="bg-red-100 text-red-600" sub={`${((metrics.fraudsDetected / metrics.totalAnalyses) * 100).toFixed(1)}% del total`} />
           <MetricCard label="Activos este mes" value={metrics.activeUsersThisMonth} icon="pi-chart-line" color="bg-emerald-100 text-emerald-600" sub={`${((metrics.activeUsersThisMonth / metrics.totalUsers) * 100).toFixed(1)}% del total`} />

@@ -76,12 +76,12 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
       onClick={() => onChange(!value)}
       className={`relative inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all
         ${value
-          ? 'bg-blue-50 border-blue-400 text-blue-700'
+          ? 'bg-purple-50 border-purple-400 text-purple-700'
           : 'bg-white border-slate-300 text-slate-700 hover:border-slate-400'
         }`}
     >
       <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0
-        ${value ? 'border-blue-600 bg-blue-600' : 'border-slate-300'}`}>
+        ${value ? 'border-purple-600 bg-purple-600' : 'border-slate-300'}`}>
         {value && <span className="w-1.5 h-1.5 bg-white rounded-full" />}
       </span>
       {label}
@@ -91,7 +91,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
   if (loadingCatalogs) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-700" />
       </div>
     );
   }
@@ -127,8 +127,8 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
               onClick={() => toggleBank(bank.id)}
               className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
                 ${form.banks.includes(bank.id)
-                  ? 'bg-blue-700 border-blue-700 text-white'
-                  : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
+                  ? 'bg-purple-700 border-purple-700 text-white'
+                  : 'bg-white border-slate-300 text-slate-700 hover:border-purple-400 hover:text-purple-700'
                 }`}
             >
               {bank.label}
@@ -150,8 +150,8 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
               onClick={() => setForm((prev) => ({ ...prev, carrier: c.id }))}
               className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
                 ${form.carrier === c.id
-                  ? 'bg-blue-700 border-blue-700 text-white'
-                  : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
+                  ? 'bg-purple-700 border-purple-700 text-white'
+                  : 'bg-white border-slate-300 text-slate-700 hover:border-purple-400 hover:text-purple-700'
                 }`}
             >
               {c.label}
@@ -180,8 +180,8 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
                   onClick={() => setForm((prev) => ({ ...prev, pensionInstitution: pi.id }))}
                   className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
                     ${form.pensionInstitution === pi.id
-                      ? 'bg-blue-700 border-blue-700 text-white'
-                      : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
+                      ? 'bg-purple-700 border-purple-700 text-white'
+                      : 'bg-white border-slate-300 text-slate-700 hover:border-purple-400 hover:text-purple-700'
                     }`}
                 >
                   {pi.label}
@@ -217,7 +217,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
           <button
             type="button"
             onClick={addContact}
-            className="text-xs text-blue-700 font-semibold hover:text-blue-800 flex items-center gap-1"
+            className="text-xs text-purple-700 font-semibold hover:text-purple-800 flex items-center gap-1"
           >
             <i className="pi pi-plus-circle" /> Agregar
           </button>
@@ -230,13 +230,13 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
                   value={contact.name}
                   onChange={(e) => updateContact(i, 'name', e.target.value)}
                   placeholder="Nombre"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
                 />
                 <input
                   value={contact.phone}
                   onChange={(e) => updateContact(i, 'phone', e.target.value)}
                   placeholder="Teléfono"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
                 />
               </div>
               <button
@@ -267,7 +267,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
           value={form.familyKeyword}
           onChange={(e) => setForm((prev) => ({ ...prev, familyKeyword: e.target.value }))}
           placeholder="Ej: girasol"
-          className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
         />
       </div>
 
@@ -284,7 +284,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+          className="flex-1 bg-purple-700 hover:bg-purple-800 disabled:bg-purple-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
         >
           {submitting ? (
             <>
