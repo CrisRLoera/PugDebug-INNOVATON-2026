@@ -1,0 +1,151 @@
+.app-shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.app-nav {
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+}
+
+.app-main {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.page {
+  text-align: left;
+}
+
+.page h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.intro {
+  margin: 1rem 0 0;
+  max-width: 60ch;
+}
+
+.feature-grid {
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.feature-grid .p-card {
+  height: 100%;
+}
+
+.cta-row {
+  margin-top: 1.5rem;
+}
+
+.link-reset {
+  text-decoration: none;
+}
+
+.playground-card {
+  margin-top: 1.5rem;
+  width: min(460px, 100%);
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  display: grid;
+  gap: 0.85rem;
+  background: color-mix(in srgb, var(--bg) 90%, var(--accent) 10%);
+}
+
+.playground-card label {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.page-not-found {
+  padding-top: 2rem;
+}
+
+.auth-screen {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: min(440px, 100%);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 92%, var(--accent) 8%);
+  box-shadow: var(--shadow);
+}
+
+.auth-form {
+  margin-top: 1.2rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.field-row {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field-row label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.field-row .p-inputtext {
+  width: 100%;
+}
+
+.field-error {
+  color: #e11d48;
+  font-size: 0.82rem;
+}
+
+.field-success {
+  margin: 0.9rem 0 0;
+  color: #166534;
+  font-size: 0.92rem;
+}
+
+.auth-links {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.auth-links a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
