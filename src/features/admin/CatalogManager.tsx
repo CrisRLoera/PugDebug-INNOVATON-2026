@@ -211,9 +211,10 @@ export function CatalogManager() {
 
   async function handleUpdate(key: CatalogKey, item: CatalogItem) {
     const updatedItem = await updateCatalogItem(key, item);
-    console.log("Updated item:", updatedItem);
-    console.log("Current items:", catalogs[key]);
-    setCatalogs((prev) => ({ ...prev, [key]: [...prev[key], updatedItem] }));
+    setCatalogs((prev) => ({
+      ...prev,
+      [key]: prev[key].map((i) => (i.id === item.id ? updatedItem : i)),
+    }));
   }
 
   async function handleDelete(key: CatalogKey, id: string) {
