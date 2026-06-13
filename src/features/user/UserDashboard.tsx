@@ -34,7 +34,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
         className="w-full text-left px-5 py-4 flex items-start gap-4 hover:bg-slate-50 transition-colors"
       >
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5
-          ${item.type === 'audio' ? 'bg-violet-100 text-violet-600' : 'bg-blue-100 text-blue-600'}`}>
+          ${item.type === 'audio' ? 'bg-violet-100 text-violet-600' : 'bg-purple-100 text-purple-600'}`}>
           <i className={`pi ${item.type === 'audio' ? 'pi-volume-up' : 'pi-envelope'} text-sm`} />
         </div>
         <div className="flex-1 min-w-0">
@@ -76,7 +76,7 @@ export function UserDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-700" />
       </div>
     );
   }
@@ -91,7 +91,7 @@ export function UserDashboard() {
       {/* Summary cards */}
       {summary && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-          <SummaryCard label="Mensajes analizados" value={summary.total} icon="pi-search" color="bg-blue-100 text-blue-600" />
+          <SummaryCard label="Mensajes analizados" value={summary.total} icon="pi-search" color="bg-purple-100 text-purple-600" />
           <SummaryCard label="Seguros" value={summary.safe} icon="pi-check-circle" color="bg-emerald-100 text-emerald-600" />
           <SummaryCard label="Sospechosos" value={summary.suspicious} icon="pi-exclamation-triangle" color="bg-amber-100 text-amber-600" />
           <SummaryCard label="Estafas bloqueadas" value={summary.fraudsBlocked} icon="pi-ban" color="bg-red-100 text-red-600" />

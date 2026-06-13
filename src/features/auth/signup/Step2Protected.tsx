@@ -45,9 +45,9 @@ export function Step2Protected({ initial, onNext, onBack }: Props) {
         </p>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
-        <i className="pi pi-info-circle text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-sm text-blue-700">
+      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 flex gap-3">
+        <i className="pi pi-info-circle text-purple-600 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-purple-700">
           Esta persona recibirá el análisis de mensajes y audios sospechosos que lleguen a su teléfono.
         </p>
       </div>
@@ -64,7 +64,7 @@ export function Step2Protected({ initial, onNext, onBack }: Props) {
           className={`w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all
             ${errors.name
               ? 'border-red-400 ring-1 ring-red-300'
-              : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+              : 'border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100'
             }`}
         />
         {errors.name && <p className="mt-1.5 text-xs text-red-600">{errors.name}</p>}
@@ -82,7 +82,7 @@ export function Step2Protected({ initial, onNext, onBack }: Props) {
           className={`w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all
             ${errors.phone
               ? 'border-red-400 ring-1 ring-red-300'
-              : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+              : 'border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100'
             }`}
         />
         {errors.phone && <p className="mt-1.5 text-xs text-red-600">{errors.phone}</p>}
@@ -99,7 +99,7 @@ export function Step2Protected({ initial, onNext, onBack }: Props) {
         </button>
         <button
           type="submit"
-          className="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+          className="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
         >
           Continuar
           <i className="pi pi-arrow-right" />

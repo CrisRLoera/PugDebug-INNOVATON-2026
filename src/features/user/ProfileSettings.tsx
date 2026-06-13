@@ -80,7 +80,7 @@ export function ProfileSettings() {
           onClick={() => onChange(v)}
           className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all
             ${value === v
-              ? 'bg-blue-700 border-blue-700 text-white'
+              ? 'bg-purple-700 border-purple-700 text-white'
               : 'bg-white border-slate-300 text-slate-700 hover:border-slate-400'
             }`}
         >
@@ -93,7 +93,7 @@ export function ProfileSettings() {
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-700" />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export function ProfileSettings() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-semibold px-4 py-2.5 rounded-lg transition-colors flex items-center gap-2 text-sm"
+          className="bg-purple-700 hover:bg-purple-800 disabled:bg-purple-400 text-white font-semibold px-4 py-2.5 rounded-lg transition-colors flex items-center gap-2 text-sm"
         >
           {saving ? <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <i className="pi pi-save" />}
           {saving ? 'Guardando...' : 'Guardar cambios'}
@@ -126,7 +126,7 @@ export function ProfileSettings() {
         {/* Protected person */}
         <section className="bg-white rounded-xl border border-slate-200 p-5">
           <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <i className="pi pi-user text-blue-600" /> Persona protegida
+            <i className="pi pi-user text-purple-600" /> Persona protegida
           </h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
@@ -134,7 +134,7 @@ export function ProfileSettings() {
               <input
                 value={data.protectedPerson.name}
                 onChange={(e) => setData({ ...data, protectedPerson: { ...data.protectedPerson, name: e.target.value } })}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
               />
             </div>
             <div>
@@ -142,7 +142,7 @@ export function ProfileSettings() {
               <input
                 value={data.protectedPerson.phone}
                 onChange={(e) => setData({ ...data, protectedPerson: { ...data.protectedPerson, phone: e.target.value } })}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ export function ProfileSettings() {
         {/* Banks */}
         <section className="bg-white rounded-xl border border-slate-200 p-5">
           <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <i className="pi pi-credit-card text-blue-600" /> Bancos que usa
+            <i className="pi pi-credit-card text-purple-600" /> Bancos que usa
           </h2>
           <div className="flex flex-wrap gap-2">
             {banks.map((bank) => (
@@ -161,8 +161,8 @@ export function ProfileSettings() {
                 onClick={() => toggleBank(bank.id)}
                 className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
                   ${data.profile.banks.includes(bank.id)
-                    ? 'bg-blue-700 border-blue-700 text-white'
-                    : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400'
+                    ? 'bg-purple-700 border-purple-700 text-white'
+                    : 'bg-white border-slate-300 text-slate-700 hover:border-purple-400'
                   }`}
               >
                 {bank.label}
@@ -174,7 +174,7 @@ export function ProfileSettings() {
         {/* Carrier */}
         <section className="bg-white rounded-xl border border-slate-200 p-5">
           <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <i className="pi pi-mobile text-blue-600" /> Compañía de celular
+            <i className="pi pi-mobile text-purple-600" /> Compañía de celular
           </h2>
           <div className="flex flex-wrap gap-2">
             {carriers.map((c) => (
@@ -184,8 +184,8 @@ export function ProfileSettings() {
                 onClick={() => setData({ ...data, profile: { ...data.profile, carrier: c.id } })}
                 className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
                   ${data.profile.carrier === c.id
-                    ? 'bg-blue-700 border-blue-700 text-white'
-                    : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400'
+                    ? 'bg-purple-700 border-purple-700 text-white'
+                    : 'bg-white border-slate-300 text-slate-700 hover:border-purple-400'
                   }`}
               >
                 {c.label}
@@ -197,7 +197,7 @@ export function ProfileSettings() {
         {/* Financial context */}
         <section className="bg-white rounded-xl border border-slate-200 p-5">
           <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <i className="pi pi-wallet text-blue-600" /> Contexto financiero
+            <i className="pi pi-wallet text-purple-600" /> Contexto financiero
           </h2>
           <div className="space-y-4">
             <div>
@@ -217,8 +217,8 @@ export function ProfileSettings() {
                         onClick={() => setData({ ...data, profile: { ...data.profile, pensionInstitution: pi.id } })}
                         className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
                           ${data.profile.pensionInstitution === pi.id
-                            ? 'bg-blue-700 border-blue-700 text-white'
-                            : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400'
+                            ? 'bg-purple-700 border-purple-700 text-white'
+                            : 'bg-white border-slate-300 text-slate-700 hover:border-purple-400'
                           }`}
                       >
                         {pi.label}
@@ -243,12 +243,12 @@ export function ProfileSettings() {
         <section className="bg-white rounded-xl border border-slate-200 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-              <i className="pi pi-users text-blue-600" /> Contactos de confianza
+              <i className="pi pi-users text-purple-600" /> Contactos de confianza
             </h2>
             <button
               type="button"
               onClick={() => setData({ ...data, profile: { ...data.profile, trustedContacts: [...data.profile.trustedContacts, { name: '', phone: '' }] } })}
-              className="text-xs text-blue-700 font-semibold hover:text-blue-800 flex items-center gap-1"
+              className="text-xs text-purple-700 font-semibold hover:text-purple-800 flex items-center gap-1"
             >
               <i className="pi pi-plus-circle" /> Agregar
             </button>
@@ -261,13 +261,13 @@ export function ProfileSettings() {
                     value={c.name}
                     onChange={(e) => updateContact(i, 'name', e.target.value)}
                     placeholder="Nombre"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
                   />
                   <input
                     value={c.phone}
                     onChange={(e) => updateContact(i, 'phone', e.target.value)}
                     placeholder="Teléfono"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
                   />
                 </div>
                 <button
@@ -288,13 +288,13 @@ export function ProfileSettings() {
         {/* Family keyword */}
         <section className="bg-white rounded-xl border border-slate-200 p-5">
           <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <i className="pi pi-key text-blue-600" /> Palabra clave familiar
+            <i className="pi pi-key text-purple-600" /> Palabra clave familiar
           </h2>
           <input
             value={data.profile.familyKeyword}
             onChange={(e) => setData({ ...data, profile: { ...data.profile, familyKeyword: e.target.value } })}
             placeholder="Ej: girasol"
-            className="w-full max-w-xs px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full max-w-xs px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100"
           />
         </section>
 

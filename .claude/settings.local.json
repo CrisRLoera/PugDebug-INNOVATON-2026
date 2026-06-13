@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(npx playwright *)",
+      "Bash(cp \"C:\\\\Users\\\\anpri\\\\Downloads\\\\WhatsApp Image 2026-06-13 at 12.15.39 AM.jpeg\" \"c:\\\\Users\\\\anpri\\\\OneDrive\\\\Documentos\\\\PugDebug-INNOVATON-2026\\\\src\\\\assets\\\\pug-logo.jpeg\")",
+      "Bash(node -e ' *)",
+      "Bash(npm list *)",
+      "Read(//c/Users/anpri/AppData/Local/ms-playwright/**)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\anpri\\Downloads"
     ]
   }
 }

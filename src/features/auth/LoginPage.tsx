@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../../api/auth';
 import { useAuth } from '../../context/AuthContext';
+import pugLogo from '../../assets/pug-logo.jpeg';
 
 type Form = { identifier: string; password: string };
 type Errors = Partial<Record<keyof Form, string>>;
@@ -58,19 +59,19 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F5EFD6] via-purple-50 to-purple-100 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Brand */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-blue-700 flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <i className="pi pi-shield text-white text-2xl" />
+          <div className="flex justify-center mb-4">
+            <img src={pugLogo} alt="PugGuardian" className="w-24 h-24 rounded-full object-cover shadow-lg" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">PugGuardian</h1>
           <p className="text-slate-500 text-sm mt-1">Protección digital para tu familia</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-purple-100 p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-1">Iniciar sesión</h2>
           <p className="text-slate-500 text-sm mb-6">Usa tu correo o teléfono y contraseña.</p>
 
@@ -95,7 +96,7 @@ export function LoginPage() {
                 className={`w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all
                   ${errors.identifier
                     ? 'border-red-400 ring-1 ring-red-300 focus:ring-red-400'
-                    : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+                    : 'border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100'
                   }`}
               />
               {errors.identifier && <p className="mt-1.5 text-xs text-red-600">{errors.identifier}</p>}
@@ -114,7 +115,7 @@ export function LoginPage() {
                 className={`w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all
                   ${errors.password
                     ? 'border-red-400 ring-1 ring-red-300 focus:ring-red-400'
-                    : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+                    : 'border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-100'
                   }`}
               />
               {errors.password && <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>}
@@ -123,7 +124,7 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm mt-2"
+              className="w-full bg-purple-700 hover:bg-purple-800 disabled:bg-purple-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm mt-2"
             >
               {loading ? (
                 <>
@@ -140,7 +141,7 @@ export function LoginPage() {
           </form>
 
           {/* Demo hint */}
-          <div className="mt-5 bg-slate-50 rounded-lg p-3 border border-slate-200">
+          <div className="mt-5 bg-purple-50 rounded-lg p-3 border border-purple-100">
             <p className="text-xs text-slate-500 font-medium mb-1">Cuentas demo:</p>
             <p className="text-xs text-slate-500">usuario@demo.com / demo1234</p>
             <p className="text-xs text-slate-500">admin@demo.com / admin1234</p>
@@ -149,7 +150,7 @@ export function LoginPage() {
 
         <p className="text-center text-sm text-slate-600 mt-6">
           ¿No tienes cuenta?{' '}
-          <Link to="/signup" className="text-blue-700 font-semibold hover:text-blue-800 transition-colors">
+          <Link to="/signup" className="text-purple-700 font-semibold hover:text-purple-800 transition-colors">
             Regístrate gratis
           </Link>
         </p>

@@ -88,7 +88,7 @@ function CatalogSection({
                 onChange={(e) => setEditLabel(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') void handleSaveEdit(item); if (e.key === 'Escape') setEditingId(null); }}
                 autoFocus
-                className="flex-1 px-3 py-1.5 rounded-lg border border-blue-400 text-sm outline-none ring-2 ring-blue-100"
+                className="flex-1 px-3 py-1.5 rounded-lg border border-purple-400 text-sm outline-none ring-2 ring-purple-100"
               />
             ) : (
               <span className="flex-1 text-sm text-slate-700">{item.label}</span>
@@ -100,7 +100,7 @@ function CatalogSection({
                   <button
                     onClick={() => void handleSaveEdit(item)}
                     disabled={busy === item.id}
-                    className="px-3 py-1.5 bg-blue-700 text-white rounded-lg text-xs font-semibold hover:bg-blue-800 disabled:opacity-50 transition-colors"
+                    className="px-3 py-1.5 bg-purple-700 text-white rounded-lg text-xs font-semibold hover:bg-purple-800 disabled:opacity-50 transition-colors"
                   >
                     {busy === item.id ? '...' : 'Guardar'}
                   </button>
@@ -115,7 +115,7 @@ function CatalogSection({
                 <>
                   <button
                     onClick={() => { setEditingId(item.id); setEditLabel(item.label); }}
-                    className="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                    className="p-1.5 text-slate-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
                     title="Editar"
                   >
                     <i className="pi pi-pencil text-xs" />
@@ -145,12 +145,12 @@ function CatalogSection({
           onChange={(e) => setNewLabel(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') void handleAdd(); }}
           placeholder={`Nuevo elemento...`}
-          className="flex-1 px-3.5 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white"
+          className="flex-1 px-3.5 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 bg-white"
         />
         <button
           onClick={handleAdd}
           disabled={adding || !newLabel.trim()}
-          className="px-4 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300 text-white rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5"
+          className="px-4 py-2 bg-purple-700 hover:bg-purple-800 disabled:bg-purple-300 text-white rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5"
         >
           {adding
             ? <span className="inline-block w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -196,7 +196,7 @@ export function CatalogManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-700" />
       </div>
     );
   }

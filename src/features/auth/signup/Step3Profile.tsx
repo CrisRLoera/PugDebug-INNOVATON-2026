@@ -16,6 +16,8 @@ export const DEFAULT_PROFILE: ProtectionProfile = {
   telecom: { mobileCarrier: '', internetProvider: '', utilityProviders: { electricity: '', water: '' }, shopsOnline: false, onlineStores: [] },
   family: { trustedContacts: [], familyKeyword: '', hasRelativesAbroad: false, emergencyVerificationChannel: 'videollamada' },
   habits: { participatesInRaffles: false, lookingForWork: false, usesDatingApps: false },
+  trustedContacts: undefined,
+  pensionInstitution: undefined
 };
 
 function validate(form: ProtectionProfile): string[] {
@@ -74,7 +76,6 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
     setErrors([]);
     onNext(form);
   }
-
   // ── Sub-components ───────────────────────────────────────────────────────
 
   const Chips = ({ items, selected, onToggle }: { items: CatalogItem[]; selected: string[]; onToggle: (id: string) => void }) => (
@@ -157,7 +158,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
   if (loadingCatalogs || !catalogs) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-700" />
       </div>
     );
   }
@@ -376,7 +377,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+          className="flex-1 bg-purple-700 hover:bg-purple-800 disabled:bg-purple-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
         >
           {submitting ? (
             <><span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Creando cuenta...</>
