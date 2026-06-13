@@ -49,26 +49,12 @@ export function Step1Account({ initial, onNext }: Props) {
     onNext(form);
   }
 
-  const Field = ({ id, label, type = 'text', field, placeholder }: {
-    id: string; label: string; type?: string; field: keyof AccountData; placeholder: string;
-  }) => (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
-      <input
-        id={id}
-        type={type}
-        value={form[field]}
-        onChange={(e) => set(field, e.target.value)}
-        placeholder={placeholder}
-        className={`w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all
-          ${errors[field]
-            ? 'border-red-400 ring-1 ring-red-300'
-            : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
-          }`}
-      />
-      {errors[field] && <p className="mt-1.5 text-xs text-red-600">{errors[field]}</p>}
-    </div>
-  );
+  const inputCls = (field: keyof AccountData) =>
+    `w-full px-3.5 py-2.5 rounded-lg border text-sm text-slate-900 placeholder-slate-400 outline-none transition-all ${
+      errors[field]
+        ? 'border-red-400 ring-1 ring-red-300'
+        : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+    }`;
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-4">
@@ -77,19 +63,39 @@ export function Step1Account({ initial, onNext }: Props) {
         <p className="text-sm text-slate-500 mt-0.5">Con estos datos podrás iniciar sesión.</p>
       </div>
 
-      <Field id="fullName" label="Nombre completo" field="fullName" placeholder="Nombre Apellido" />
-      <Field id="email" label="Correo electrónico" type="email" field="email" placeholder="nombre@correo.com" />
-      <Field id="phone" label="Teléfono" field="phone" placeholder="555 123 4567" />
-      <Field id="password" label="Contraseña" type="password" field="password" placeholder="Mínimo 8 caracteres" />
-      <Field id="confirm" label="Confirmar contraseña" type="password" field="confirmPassword" placeholder="Repite tu contraseña" />
+      <div>
+        <label htmlFor="fullName" className="block text-sm font-medium text-slate-700 mb-1.5">Nombre completo</label>
+        <input id="fullName" value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Nombre Apellido" className={inputCls('fullName')} />
+        {errors.fullName && <p className="mt-1.5 text-xs text-red-600">{errors.fullName}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">Correo electrónico</label>
+        <input id="email" type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="nombre@correo.com" className={inputCls('email')} />
+        {errors.email && <p className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1.5">Teléfono</label>
+        <input id="phone" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="555 123 4567" className={inputCls('phone')} />
+        {errors.phone && <p className="mt-1.5 text-xs text-red-600">{errors.phone}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">Contraseña</label>
+        <input id="password" type="password" value={form.password} onChange={(e) => set('password', e.target.value)} placeholder="Mínimo 8 caracteres" className={inputCls('password')} />
+        {errors.password && <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 mb-1.5">Confirmar contraseña</label>
+        <input id="confirmPassword" type="password" value={form.confirmPassword} onChange={(e) => set('confirmPassword', e.target.value)} placeholder="Repite tu contraseña" className={inputCls('confirmPassword')} />
+        {errors.confirmPassword && <p className="mt-1.5 text-xs text-red-600">{errors.confirmPassword}</p>}
+      </div>
 
       <div className="pt-2">
-        <button
-          type="submit"
-          className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
-        >
-          Continuar
-          <i className="pi pi-arrow-right" />
+        <button type="submit" className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm">
+          Continuar <i className="pi pi-arrow-right" />
         </button>
       </div>
     </form>

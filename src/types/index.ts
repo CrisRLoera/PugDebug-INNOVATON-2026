@@ -16,21 +16,50 @@ export interface ProtectedPerson {
 
 export interface TrustedContact {
   name: string;
+  relationship: string;
   phone: string;
 }
 
+// Matches perfil_struct.json exactly
 export interface ProtectionProfile {
-  banks: string[];
-  carrier: string;
-  receivesPension: boolean;
-  pensionInstitution: string;
-  participatesInLotteries: boolean;
-  hasInvestments: boolean;
-  trustedContacts: TrustedContact[];
-  familyKeyword: string;
+  banking: {
+    banks: string[];
+    departmentCards: string[];
+    usesMobileBanking: boolean;
+    hasInvestments: boolean;
+    hasCrypto: boolean;
+  };
+  government: {
+    receivesPension: boolean;
+    pensionProvider: string;
+    filesTaxesPersonally: boolean;
+    enrolledInSocialPrograms: string[];
+  };
+  telecom: {
+    mobileCarrier: string;
+    internetProvider: string;
+    utilityProviders: {
+      electricity: string;
+      water: string;
+    };
+    shopsOnline: boolean;
+    onlineStores: string[];
+  };
+  family: {
+    trustedContacts: TrustedContact[];
+    familyKeyword: string;
+    hasRelativesAbroad: boolean;
+    emergencyVerificationChannel: string;
+  };
+  habits: {
+    participatesInRaffles: boolean;
+    lookingForWork: boolean;
+    usesDatingApps: boolean;
+  };
 }
 
-export interface OnboardingData {
+// Full payload sent to n8n onboarding webhook → DynamoDB
+export interface OnboardingPayload {
   account: {
     email: string;
     phone: string;
@@ -38,7 +67,11 @@ export interface OnboardingData {
     fullName: string;
   };
   protectedPerson: ProtectedPerson;
-  profile: ProtectionProfile;
+  profile: {
+    profileId: string;
+    createdAt: string;
+    updatedAt: string;
+  } & ProtectionProfile;
 }
 
 export type RiskLevel = 'bajo' | 'medio' | 'alto';
@@ -70,6 +103,12 @@ export interface Catalogs {
   banks: CatalogItem[];
   carriers: CatalogItem[];
   pensionInstitutions: CatalogItem[];
+  departmentCards: CatalogItem[];
+  socialPrograms: CatalogItem[];
+  internetProviders: CatalogItem[];
+  electricityProviders: CatalogItem[];
+  waterProviders: CatalogItem[];
+  onlineStores: CatalogItem[];
 }
 
 export interface AdminMetrics {

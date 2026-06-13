@@ -1,7 +1,31 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { getCatalogs } from '../../../api/admin';
-import type { ProtectionProfile, TrustedContact, CatalogItem } from '../../../types';
+import type { ProtectionProfile, TrustedContact, CatalogItem, Catalogs } from '../../../types';
+
+const RELATIONSHIPS = ['hijo', 'hija', 'hermano', 'hermana', 'nieto', 'nieta', 'sobrino', 'sobrina', 'amigo', 'amiga', 'otro'];
+const VERIFICATION_CHANNELS = [
+  { id: 'videollamada', label: 'Videollamada' },
+  { id: 'llamada', label: 'Llamada telefónica' },
+  { id: 'mensaje', label: 'Mensaje de texto' },
+];
+
+export const DEFAULT_PROFILE: ProtectionProfile = {
+  banking: { banks: [], departmentCards: [], usesMobileBanking: false, hasInvestments: false, hasCrypto: false },
+  government: { receivesPension: false, pensionProvider: '', filesTaxesPersonally: false, enrolledInSocialPrograms: [] },
+  telecom: { mobileCarrier: '', internetProvider: '', utilityProviders: { electricity: '', water: '' }, shopsOnline: false, onlineStores: [] },
+  family: { trustedContacts: [], familyKeyword: '', hasRelativesAbroad: false, emergencyVerificationChannel: 'videollamada' },
+  habits: { participatesInRaffles: false, lookingForWork: false, usesDatingApps: false },
+};
+
+function validate(form: ProtectionProfile): string[] {
+  const errors: string[] = [];
+  if (form.banking.banks.length === 0) errors.push('Selecciona al menos un banco.');
+  if (!form.telecom.mobileCarrier) errors.push('Selecciona una compañía de celular.');
+  if (form.government.receivesPension && !form.government.pensionProvider) errors.push('Indica la institución de pensión.');
+  if (!form.family.familyKeyword.trim()) errors.push('La palabra clave familiar es obligatoria.');
+  return errors;
+}
 
 interface Props {
   initial: ProtectionProfile;
@@ -10,54 +34,37 @@ interface Props {
   submitting: boolean;
 }
 
-function validate(form: ProtectionProfile): string[] {
-  const errors: string[] = [];
-  if (form.banks.length === 0) errors.push('Selecciona al menos un banco.');
-  if (!form.carrier) errors.push('Selecciona una compañía de celular.');
-  if (form.receivesPension && !form.pensionInstitution) errors.push('Indica la institución de pensión.');
-  if (!form.familyKeyword.trim()) errors.push('La palabra clave familiar es obligatoria.');
-  return errors;
-}
-
 export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
   const [form, setForm] = useState<ProtectionProfile>(initial);
   const [errors, setErrors] = useState<string[]>([]);
-  const [banks, setBanks] = useState<CatalogItem[]>([]);
-  const [carriers, setCarriers] = useState<CatalogItem[]>([]);
-  const [pensionInstitutions, setPensionInstitutions] = useState<CatalogItem[]>([]);
+  const [catalogs, setCatalogs] = useState<Catalogs | null>(null);
   const [loadingCatalogs, setLoadingCatalogs] = useState(true);
 
   useEffect(() => {
-    getCatalogs()
-      .then((c) => {
-        setBanks(c.banks);
-        setCarriers(c.carriers);
-        setPensionInstitutions(c.pensionInstitutions);
-      })
-      .finally(() => setLoadingCatalogs(false));
+    getCatalogs().then(setCatalogs).finally(() => setLoadingCatalogs(false));
   }, []);
 
-  function toggleBank(id: string) {
-    setForm((prev) => ({
-      ...prev,
-      banks: prev.banks.includes(id) ? prev.banks.filter((b) => b !== id) : [...prev.banks, id],
-    }));
-  }
+  // ── Helpers ──────────────────────────────────────────────────────────────
 
-  function updateContact(index: number, field: keyof TrustedContact, value: string) {
+  function toggleMulti(section: keyof ProtectionProfile, field: string, id: string) {
     setForm((prev) => {
-      const contacts = [...prev.trustedContacts];
-      contacts[index] = { ...contacts[index], [field]: value };
-      return { ...prev, trustedContacts: contacts };
+      const s = prev[section] as Record<string, unknown>;
+      const arr = (s[field] as string[]) ?? [];
+      return {
+        ...prev,
+        [section]: { ...s, [field]: arr.includes(id) ? arr.filter((v) => v !== id) : [...arr, id] },
+      };
     });
   }
 
-  function addContact() {
-    setForm((prev) => ({ ...prev, trustedContacts: [...prev.trustedContacts, { name: '', phone: '' }] }));
+  function setField(section: keyof ProtectionProfile, field: string, value: unknown) {
+    setForm((prev) => ({ ...prev, [section]: { ...(prev[section] as object), [field]: value } }));
   }
 
-  function removeContact(index: number) {
-    setForm((prev) => ({ ...prev, trustedContacts: prev.trustedContacts.filter((_, i) => i !== index) }));
+  function updateContact(i: number, f: keyof TrustedContact, v: string) {
+    const contacts = [...form.family.trustedContacts];
+    contacts[i] = { ...contacts[i], [f]: v };
+    setField('family', 'trustedContacts', contacts);
   }
 
   function onSubmit(e: FormEvent) {
@@ -68,27 +75,86 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
     onNext(form);
   }
 
-  const Toggle = ({
-    label, value, onChange,
-  }: { label: string; value: boolean; onChange: (v: boolean) => void }) => (
-    <button
-      type="button"
-      onClick={() => onChange(!value)}
-      className={`relative inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all
-        ${value
-          ? 'bg-blue-50 border-blue-400 text-blue-700'
-          : 'bg-white border-slate-300 text-slate-700 hover:border-slate-400'
-        }`}
-    >
-      <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0
-        ${value ? 'border-blue-600 bg-blue-600' : 'border-slate-300'}`}>
-        {value && <span className="w-1.5 h-1.5 bg-white rounded-full" />}
-      </span>
-      {label}
-    </button>
+  // ── Sub-components ───────────────────────────────────────────────────────
+
+  const Chips = ({ items, selected, onToggle }: { items: CatalogItem[]; selected: string[]; onToggle: (id: string) => void }) => (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => onToggle(item.id)}
+          className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
+            ${selected.includes(item.id)
+              ? 'bg-blue-700 border-blue-700 text-white'
+              : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
+            }`}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
   );
 
-  if (loadingCatalogs) {
+  const SingleChips = ({ items, value, onChange }: { items: CatalogItem[]; value: string; onChange: (id: string) => void }) => (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => onChange(item.id)}
+          className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
+            ${value === item.id
+              ? 'bg-blue-700 border-blue-700 text-white'
+              : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
+            }`}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  const YesNo = ({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) => (
+    <div className="flex gap-2">
+      {([true, false] as const).map((v) => (
+        <button
+          key={String(v)}
+          type="button"
+          onClick={() => onChange(v)}
+          className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-all
+            ${value === v
+              ? 'bg-blue-700 border-blue-700 text-white'
+              : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400'
+            }`}
+        >
+          {v ? 'Sí' : 'No'}
+        </button>
+      ))}
+    </div>
+  );
+
+  const SectionTitle = ({ icon, title }: { icon: string; title: string }) => (
+    <div className="flex items-center gap-2 mb-4">
+      <div className="w-7 h-7 rounded-md bg-blue-50 flex items-center justify-center flex-shrink-0">
+        <i className={`pi ${icon} text-blue-600 text-sm`} />
+      </div>
+      <h4 className="text-sm font-semibold text-slate-900">{title}</h4>
+    </div>
+  );
+
+  const FieldRow = ({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) => (
+    <div className="space-y-2">
+      <p className="text-sm text-slate-700">
+        {label} {required && <span className="text-red-500">*</span>}
+      </p>
+      {children}
+    </div>
+  );
+
+  // ── Render ───────────────────────────────────────────────────────────────
+
+  if (loadingCatalogs || !catalogs) {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
@@ -100,175 +166,202 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
     <form onSubmit={onSubmit} noValidate className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold text-slate-900">Perfil de protección</h3>
-        <p className="text-sm text-slate-500 mt-0.5">
-          Esta información ayuda a PugGuardian a detectar fraudes dirigidos a tu familiar.
-        </p>
+        <p className="text-sm text-slate-500 mt-0.5">Esta información ayuda a detectar fraudes dirigidos a tu familiar.</p>
       </div>
 
       {errors.length > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm font-semibold text-red-700 mb-1">Hay campos incompletos:</p>
+          <p className="text-sm font-semibold text-red-700 mb-1">Campos obligatorios incompletos:</p>
           <ul className="list-disc list-inside space-y-0.5">
             {errors.map((e) => <li key={e} className="text-sm text-red-600">{e}</li>)}
           </ul>
         </div>
       )}
 
-      {/* Banks */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
-          Bancos que usa <span className="text-red-500">*</span>
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {banks.map((bank) => (
-            <button
-              key={bank.id}
-              type="button"
-              onClick={() => toggleBank(bank.id)}
-              className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
-                ${form.banks.includes(bank.id)
-                  ? 'bg-blue-700 border-blue-700 text-white'
-                  : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
-                }`}
-            >
-              {bank.label}
-            </button>
-          ))}
+      {/* ── BANCARIA ── */}
+      <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-4">
+        <SectionTitle icon="pi-credit-card" title="Información bancaria" />
+
+        <FieldRow label="Bancos que usa" required>
+          <Chips items={catalogs.banks} selected={form.banking.banks} onToggle={(id) => toggleMulti('banking', 'banks', id)} />
+        </FieldRow>
+
+        <FieldRow label="Tarjetas departamentales">
+          <Chips items={catalogs.departmentCards} selected={form.banking.departmentCards} onToggle={(id) => toggleMulti('banking', 'departmentCards', id)} />
+        </FieldRow>
+
+        <div className="grid sm:grid-cols-3 gap-4">
+          <FieldRow label="¿Usa banca móvil?">
+            <YesNo value={form.banking.usesMobileBanking} onChange={(v) => setField('banking', 'usesMobileBanking', v)} />
+          </FieldRow>
+          <FieldRow label="¿Tiene inversiones?">
+            <YesNo value={form.banking.hasInvestments} onChange={(v) => setField('banking', 'hasInvestments', v)} />
+          </FieldRow>
+          <FieldRow label="¿Tiene criptomonedas?">
+            <YesNo value={form.banking.hasCrypto} onChange={(v) => setField('banking', 'hasCrypto', v)} />
+          </FieldRow>
         </div>
       </div>
 
-      {/* Carrier */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
-          Compañía de celular <span className="text-red-500">*</span>
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {carriers.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => setForm((prev) => ({ ...prev, carrier: c.id }))}
-              className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
-                ${form.carrier === c.id
-                  ? 'bg-blue-700 border-blue-700 text-white'
-                  : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
-                }`}
-            >
-              {c.label}
-            </button>
-          ))}
+      {/* ── GOBIERNO ── */}
+      <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-4">
+        <SectionTitle icon="pi-building" title="Gobierno y programas sociales" />
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FieldRow label="¿Recibe pensión?">
+            <YesNo
+              value={form.government.receivesPension}
+              onChange={(v) => setField('government', 'receivesPension', v)}
+            />
+          </FieldRow>
+          <FieldRow label="¿Declara impuestos personalmente?">
+            <YesNo value={form.government.filesTaxesPersonally} onChange={(v) => setField('government', 'filesTaxesPersonally', v)} />
+          </FieldRow>
         </div>
+
+        {form.government.receivesPension && (
+          <FieldRow label="Institución de pensión" required>
+            <SingleChips
+              items={catalogs.pensionInstitutions}
+              value={form.government.pensionProvider}
+              onChange={(id) => setField('government', 'pensionProvider', id)}
+            />
+          </FieldRow>
+        )}
+
+        <FieldRow label="Programas sociales en los que participa">
+          <Chips items={catalogs.socialPrograms} selected={form.government.enrolledInSocialPrograms} onToggle={(id) => toggleMulti('government', 'enrolledInSocialPrograms', id)} />
+        </FieldRow>
       </div>
 
-      {/* Pension */}
-      <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">¿Recibe pensión?</p>
-        <div className="flex gap-2 mb-3">
-          <Toggle label="Sí" value={form.receivesPension} onChange={(v) => setForm((p) => ({ ...p, receivesPension: v, pensionInstitution: v ? p.pensionInstitution : '' }))} />
-          <Toggle label="No" value={!form.receivesPension} onChange={(v) => setForm((p) => ({ ...p, receivesPension: !v, pensionInstitution: !v ? '' : p.pensionInstitution }))} />
+      {/* ── TELECOMUNICACIONES ── */}
+      <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-4">
+        <SectionTitle icon="pi-mobile" title="Telecomunicaciones y servicios" />
+
+        <FieldRow label="Compañía de celular" required>
+          <SingleChips items={catalogs.carriers} value={form.telecom.mobileCarrier} onChange={(id) => setField('telecom', 'mobileCarrier', id)} />
+        </FieldRow>
+
+        <FieldRow label="Proveedor de internet">
+          <SingleChips items={catalogs.internetProviders} value={form.telecom.internetProvider} onChange={(id) => setField('telecom', 'internetProvider', id)} />
+        </FieldRow>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FieldRow label="Compañía de luz">
+            <SingleChips
+              items={catalogs.electricityProviders}
+              value={form.telecom.utilityProviders.electricity}
+              onChange={(id) => setField('telecom', 'utilityProviders', { ...form.telecom.utilityProviders, electricity: id })}
+            />
+          </FieldRow>
+          <FieldRow label="Compañía de agua">
+            <SingleChips
+              items={catalogs.waterProviders}
+              value={form.telecom.utilityProviders.water}
+              onChange={(id) => setField('telecom', 'utilityProviders', { ...form.telecom.utilityProviders, water: id })}
+            />
+          </FieldRow>
         </div>
-        {form.receivesPension && (
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              ¿De qué institución? <span className="text-red-500">*</span>
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {pensionInstitutions.map((pi) => (
-                <button
-                  key={pi.id}
-                  type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, pensionInstitution: pi.id }))}
-                  className={`px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all
-                    ${form.pensionInstitution === pi.id
-                      ? 'bg-blue-700 border-blue-700 text-white'
-                      : 'bg-white border-slate-300 text-slate-700 hover:border-blue-400 hover:text-blue-700'
-                    }`}
-                >
-                  {pi.label}
-                </button>
-              ))}
-            </div>
-          </div>
+
+        <FieldRow label="¿Compra en línea?">
+          <YesNo value={form.telecom.shopsOnline} onChange={(v) => setField('telecom', 'shopsOnline', v)} />
+        </FieldRow>
+
+        {form.telecom.shopsOnline && (
+          <FieldRow label="Tiendas en línea que usa">
+            <Chips items={catalogs.onlineStores} selected={form.telecom.onlineStores} onToggle={(id) => toggleMulti('telecom', 'onlineStores', id)} />
+          </FieldRow>
         )}
       </div>
 
-      {/* Lotteries */}
-      <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">¿Participa en sorteos?</p>
-        <div className="flex gap-2">
-          <Toggle label="Sí" value={form.participatesInLotteries} onChange={(v) => setForm((p) => ({ ...p, participatesInLotteries: v }))} />
-          <Toggle label="No" value={!form.participatesInLotteries} onChange={(v) => setForm((p) => ({ ...p, participatesInLotteries: !v }))} />
-        </div>
-      </div>
+      {/* ── FAMILIA ── */}
+      <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-4">
+        <SectionTitle icon="pi-users" title="Familia y contactos" />
 
-      {/* Investments */}
-      <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">¿Tiene inversiones?</p>
-        <div className="flex gap-2">
-          <Toggle label="Sí" value={form.hasInvestments} onChange={(v) => setForm((p) => ({ ...p, hasInvestments: v }))} />
-          <Toggle label="No" value={!form.hasInvestments} onChange={(v) => setForm((p) => ({ ...p, hasInvestments: !v }))} />
-        </div>
-      </div>
-
-      {/* Trusted contacts */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-slate-700">Contactos de confianza</label>
-          <button
-            type="button"
-            onClick={addContact}
-            className="text-xs text-blue-700 font-semibold hover:text-blue-800 flex items-center gap-1"
-          >
-            <i className="pi pi-plus-circle" /> Agregar
-          </button>
-        </div>
-        <div className="space-y-3">
-          {form.trustedContacts.map((contact, i) => (
-            <div key={i} className="flex gap-2 items-start">
-              <div className="flex-1 grid grid-cols-2 gap-2">
-                <input
-                  value={contact.name}
-                  onChange={(e) => updateContact(i, 'name', e.target.value)}
-                  placeholder="Nombre"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-                <input
-                  value={contact.phone}
-                  onChange={(e) => updateContact(i, 'phone', e.target.value)}
-                  placeholder="Teléfono"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-slate-700">Contactos de confianza</p>
+            <button
+              type="button"
+              onClick={() => setField('family', 'trustedContacts', [...form.family.trustedContacts, { name: '', relationship: 'hijo', phone: '' }])}
+              className="text-xs text-blue-700 font-semibold hover:text-blue-800 flex items-center gap-1"
+            >
+              <i className="pi pi-plus-circle" /> Agregar
+            </button>
+          </div>
+          <div className="space-y-2">
+            {form.family.trustedContacts.map((c, i) => (
+              <div key={i} className="flex gap-2 items-start">
+                <div className="flex-1 grid grid-cols-3 gap-2">
+                  <input
+                    value={c.name}
+                    onChange={(e) => updateContact(i, 'name', e.target.value)}
+                    placeholder="Nombre"
+                    className="px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white"
+                  />
+                  <select
+                    value={c.relationship}
+                    onChange={(e) => updateContact(i, 'relationship', e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 bg-white"
+                  >
+                    {RELATIONSHIPS.map((r) => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                  <input
+                    value={c.phone}
+                    onChange={(e) => updateContact(i, 'phone', e.target.value)}
+                    placeholder="Teléfono"
+                    className="px-3 py-2 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setField('family', 'trustedContacts', form.family.trustedContacts.filter((_, idx) => idx !== i))}
+                  className="mt-1.5 p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  <i className="pi pi-trash text-sm" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => removeContact(i)}
-                className="mt-1 p-2 text-slate-400 hover:text-red-500 transition-colors"
-              >
-                <i className="pi pi-trash text-sm" />
-              </button>
-            </div>
-          ))}
-          {form.trustedContacts.length === 0 && (
-            <p className="text-sm text-slate-400 italic">Ningún contacto agregado aún.</p>
-          )}
+            ))}
+            {form.family.trustedContacts.length === 0 && (
+              <p className="text-sm text-slate-400 italic">Ningún contacto agregado aún.</p>
+            )}
+          </div>
+        </div>
+
+        <FieldRow label="Palabra clave familiar" required>
+          <input
+            value={form.family.familyKeyword}
+            onChange={(e) => setField('family', 'familyKeyword', e.target.value)}
+            placeholder="Ej: aguacate"
+            className="w-full max-w-xs px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white"
+          />
+          <p className="text-xs text-slate-400">Palabra secreta para verificar identidad en llamadas.</p>
+        </FieldRow>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FieldRow label="¿Tiene familiares en el extranjero?">
+            <YesNo value={form.family.hasRelativesAbroad} onChange={(v) => setField('family', 'hasRelativesAbroad', v)} />
+          </FieldRow>
+          <FieldRow label="Canal de verificación de emergencias">
+            <SingleChips items={VERIFICATION_CHANNELS} value={form.family.emergencyVerificationChannel} onChange={(id) => setField('family', 'emergencyVerificationChannel', id)} />
+          </FieldRow>
         </div>
       </div>
 
-      {/* Family keyword */}
-      <div>
-        <label htmlFor="keyword" className="block text-sm font-medium text-slate-700 mb-1.5">
-          Palabra clave familiar <span className="text-red-500">*</span>
-        </label>
-        <p className="text-xs text-slate-500 mb-2">
-          Una palabra secreta que solo la familia conoce, para verificar la identidad en llamadas.
-        </p>
-        <input
-          id="keyword"
-          value={form.familyKeyword}
-          onChange={(e) => setForm((prev) => ({ ...prev, familyKeyword: e.target.value }))}
-          placeholder="Ej: girasol"
-          className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-        />
+      {/* ── HÁBITOS ── */}
+      <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-4">
+        <SectionTitle icon="pi-calendar" title="Hábitos" />
+        <div className="grid sm:grid-cols-3 gap-4">
+          <FieldRow label="¿Participa en sorteos?">
+            <YesNo value={form.habits.participatesInRaffles} onChange={(v) => setField('habits', 'participatesInRaffles', v)} />
+          </FieldRow>
+          <FieldRow label="¿Busca trabajo actualmente?">
+            <YesNo value={form.habits.lookingForWork} onChange={(v) => setField('habits', 'lookingForWork', v)} />
+          </FieldRow>
+          <FieldRow label="¿Usa apps de citas?">
+            <YesNo value={form.habits.usesDatingApps} onChange={(v) => setField('habits', 'usesDatingApps', v)} />
+          </FieldRow>
+        </div>
       </div>
 
       <div className="flex gap-3 pt-2">
@@ -278,8 +371,7 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
           disabled={submitting}
           className="flex-1 border border-slate-300 text-slate-700 font-semibold py-2.5 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50"
         >
-          <i className="pi pi-arrow-left" />
-          Atrás
+          <i className="pi pi-arrow-left" /> Atrás
         </button>
         <button
           type="submit"
@@ -287,15 +379,9 @@ export function Step3Profile({ initial, onNext, onBack, submitting }: Props) {
           className="flex-1 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
         >
           {submitting ? (
-            <>
-              <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Creando cuenta...
-            </>
+            <><span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Creando cuenta...</>
           ) : (
-            <>
-              <i className="pi pi-check" />
-              Crear cuenta
-            </>
+            <><i className="pi pi-check" /> Crear cuenta</>
           )}
         </button>
       </div>

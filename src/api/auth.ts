@@ -24,7 +24,11 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
     }
     return { user: entry.user };
   }
-  return post<LoginResponse>(BASE_URL.auth.login, payload);
+  const data = await post<{ user?: User; error?: string }>(BASE_URL.auth.login, payload);
+  if (!data.user) {
+    throw new Error(data.error ?? 'Credenciales incorrectas. Verifica tu correo y contraseña.');
+  }
+  return { user: data.user };
 }
 
 export async function deleteAccount(userId: string): Promise<void> {

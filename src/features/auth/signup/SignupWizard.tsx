@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Step1Account } from './Step1Account';
 import { Step2Protected } from './Step2Protected';
-import { Step3Profile } from './Step3Profile';
+import { Step3Profile, DEFAULT_PROFILE } from './Step3Profile';
 import { submitOnboarding } from '../../../api/onboarding';
 import { useAuth } from '../../../context/AuthContext';
 import type { AccountData } from './Step1Account';
@@ -10,20 +10,8 @@ import type { ProtectedPerson, ProtectionProfile } from '../../../types';
 
 const STEPS = ['Tu cuenta', 'Persona protegida', 'Perfil de protección'];
 
-const DEFAULT_ACCOUNT: AccountData = {
-  fullName: '', email: '', phone: '', password: '', confirmPassword: '',
-};
+const DEFAULT_ACCOUNT: AccountData = { fullName: '', email: '', phone: '', password: '', confirmPassword: '' };
 const DEFAULT_PERSON: ProtectedPerson = { name: '', phone: '' };
-const DEFAULT_PROFILE: ProtectionProfile = {
-  banks: [],
-  carrier: '',
-  receivesPension: false,
-  pensionInstitution: '',
-  participatesInLotteries: false,
-  hasInvestments: false,
-  trustedContacts: [],
-  familyKeyword: '',
-};
 
 export function SignupWizard() {
   const { signIn } = useAuth();
@@ -38,6 +26,10 @@ export function SignupWizard() {
   async function handleStep3(profileData: ProtectionProfile) {
     setSubmitting(true);
     setServerError('');
+
+    const now = new Date().toISOString();
+    const profileId = crypto.randomUUID();
+
     try {
       const { user } = await submitOnboarding({
         account: {
@@ -47,7 +39,12 @@ export function SignupWizard() {
           password: account.password,
         },
         protectedPerson: person,
-        profile: profileData,
+        profile: {
+          profileId,
+          createdAt: now,
+          updatedAt: now,
+          ...profileData,
+        },
       });
       signIn(user);
       navigate('/dashboard', { replace: true });
@@ -59,7 +56,7 @@ export function SignupWizard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg">
+      <div className="w-full max-w-2xl">
         {/* Brand */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="w-9 h-9 rounded-xl bg-blue-700 flex items-center justify-center shadow">
@@ -98,22 +95,15 @@ export function SignupWizard() {
           )}
 
           {step === 0 && (
-            <Step1Account
-              initial={account}
-              onNext={(data) => { setAccount(data); setStep(1); }}
-            />
+            <Step1Account initial={account} onNext={(d) => { setAccount(d); setStep(1); }} />
           )}
           {step === 1 && (
-            <Step2Protected
-              initial={person}
-              onNext={(data) => { setPerson(data); setStep(2); }}
-              onBack={() => setStep(0)}
-            />
+            <Step2Protected initial={person} onNext={(d) => { setPerson(d); setStep(2); }} onBack={() => setStep(0)} />
           )}
           {step === 2 && (
             <Step3Profile
               initial={profile}
-              onNext={(data) => { setProfile(data); void handleStep3(data); }}
+              onNext={(d) => { setProfile(d); void handleStep3(d); }}
               onBack={() => setStep(1)}
               submitting={submitting}
             />

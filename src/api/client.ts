@@ -1,28 +1,27 @@
 // Set to false when n8n webhooks are ready
-export const USE_MOCK = true;
+export const USE_MOCK = false;
 
 export const BASE_URL = {
   auth: {
-    login: 'https://PLACEHOLDER.n8n.cloud/webhook/auth/login',
-    signup: 'https://PLACEHOLDER.n8n.cloud/webhook/auth/signup',
-    deleteAccount: 'https://PLACEHOLDER.n8n.cloud/webhook/auth/delete',
+    login: 'https://cristiandev.app.n8n.cloud/webhook/auth/login',
+    deleteAccount: 'https://cristiandev.app.n8n.cloud/webhook/auth/delete',
   },
-  onboarding: 'https://PLACEHOLDER.n8n.cloud/webhook/onboarding',
+  onboarding: 'https://cristiandev.app.n8n.cloud/webhook/onboarding',
   activity: {
     list: 'https://PLACEHOLDER.n8n.cloud/webhook/activity/list',
   },
   profile: {
-    get: 'https://PLACEHOLDER.n8n.cloud/webhook/profile/get',
-    update: 'https://PLACEHOLDER.n8n.cloud/webhook/profile/update',
+    get: 'https://cristiandev.app.n8n.cloud/webhook/profile/get',
+    update: 'https://cristiandev.app.n8n.cloud/webhook/profile/update',
   },
   admin: {
-    metrics: 'https://PLACEHOLDER.n8n.cloud/webhook/admin/metrics',
-    users: 'https://PLACEHOLDER.n8n.cloud/webhook/admin/users',
+    metrics: 'https://cristiandev.app.n8n.cloud/webhook/admin/metrics',
+    users: 'https://cristiandev.app.n8n.cloud/webhook/admin/users',
     catalogs: {
-      list: 'https://PLACEHOLDER.n8n.cloud/webhook/admin/catalogs',
-      create: 'https://PLACEHOLDER.n8n.cloud/webhook/admin/catalogs/create',
-      update: 'https://PLACEHOLDER.n8n.cloud/webhook/admin/catalogs/update',
-      delete: 'https://PLACEHOLDER.n8n.cloud/webhook/admin/catalogs/delete',
+      list: 'https://cristiandev.app.n8n.cloud/webhook/admin/catalogs',
+      create: 'https://cristiandev.app.n8n.cloud/webhook/admin/catalogs/create',
+      update: 'https://cristiandev.app.n8n.cloud/webhook/admin/catalogs/update',
+      delete: 'https://cristiandev.app.n8n.cloud/webhook/admin/catalogs/delete',
     },
   },
 };

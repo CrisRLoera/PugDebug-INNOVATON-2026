@@ -8,6 +8,12 @@ const CATALOG_LABELS: Record<CatalogKey, string> = {
   banks: 'Bancos',
   carriers: 'Compañías de celular',
   pensionInstitutions: 'Instituciones de pensión',
+  departmentCards: 'Tarjetas departamentales',
+  socialPrograms: 'Programas sociales',
+  internetProviders: 'Proveedores de internet',
+  electricityProviders: 'Proveedores de luz',
+  waterProviders: 'Proveedores de agua',
+  onlineStores: 'Tiendas en línea',
 };
 
 function CatalogSection({
@@ -158,7 +164,11 @@ function CatalogSection({
 }
 
 export function CatalogManager() {
-  const [catalogs, setCatalogs] = useState<Catalogs>({ banks: [], carriers: [], pensionInstitutions: [] });
+  const [catalogs, setCatalogs] = useState<Catalogs>({
+    banks: [], carriers: [], pensionInstitutions: [],
+    departmentCards: [], socialPrograms: [], internetProviders: [],
+    electricityProviders: [], waterProviders: [], onlineStores: [],
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
