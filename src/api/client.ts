@@ -4,6 +4,7 @@ export const USE_MOCK = false;
 export const BASE_URL = {
   auth: {
     login: "https://cristiandev.app.n8n.cloud/webhook/auth/login",
+    check: "https://cristiandev.app.n8n.cloud/webhook/auth/check",
     deleteAccount: "https://cristiandev.app.n8n.cloud/webhook/auth/delete",
   },
   onboarding: "https://cristiandev.app.n8n.cloud/webhook/onboarding",

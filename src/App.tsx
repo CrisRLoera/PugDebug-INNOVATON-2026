@@ -4,6 +4,7 @@ import { AppLayout } from './components/shared/AppLayout';
 import { ProtectedRoute } from './components/shared/ProtectedRoute';
 import { LoginPage } from './features/auth/LoginPage';
 import { SignupWizard } from './features/auth/signup/SignupWizard';
+import { LandingPage } from './features/auth/LandingPage';
 import { UserDashboard } from './features/user/UserDashboard';
 import { ProfileSettings } from './features/user/ProfileSettings';
 import { AdminDashboard } from './features/admin/AdminDashboard';
@@ -13,7 +14,7 @@ import { UserList } from './features/admin/UserList';
 function RootRedirect() {
   const { user, isLoading } = useAuth();
   if (isLoading) return null;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <LandingPage />;
   return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
 }
 
